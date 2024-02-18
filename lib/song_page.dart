@@ -91,35 +91,45 @@ class _SongPageState extends State<SongPage> {
                 const SizedBox(height: 30),
 
                 // start time, shuffle button, repeat button, end time
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    Text('0:00'),
-                    Icon(Icons.shuffle),
-                    Icon(Icons.repeat),
-                    Text('4:22')
-                  ],
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('0:00'),
+                      Icon(Icons.shuffle),
+                      Icon(Icons.repeat),
+                      Text('4:22')
+                    ],
+                  ),
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
 
                 // linear bar
-                NeuBox(
-                  child: LinearPercentIndicator(
-                    lineHeight: 10,
-                    percent: 0.8,
-                    progressColor: Colors.green,
-                    backgroundColor: Colors.transparent,
+                SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    inactiveTrackColor: Colors.grey.shade500,
+                    thumbShape: const RoundSliderThumbShape(
+                      enabledThumbRadius: 8,
+                    ),
+                  ),
+                  child: Slider(
+                    min: 0,
+                    max: 100,
+                    value: 50,
+                    activeColor: Colors.green,
+                    onChanged: (value) {},
                   ),
                 ),
 
                 const SizedBox(height: 30),
 
                 // previous song, pause play, skip next song
-                SizedBox(
+                const SizedBox(
                   height: 80,
                   child: Row(
-                    children: const [
+                    children: [
                       Expanded(
                         child: NeuBox(
                             child: Icon(
@@ -147,7 +157,8 @@ class _SongPageState extends State<SongPage> {
                       ),
                     ],
                   ),
-                )
+                ),
+                const SizedBox(height: 30),
               ],
             ),
           ),
