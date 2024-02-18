@@ -9,12 +9,12 @@ class NeuBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.grey[300],
+        color: Theme.of(context).colorScheme.background,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           // darker shadow on the bottom right
           BoxShadow(
-            color: Colors.grey.shade500,
+            color: Theme.of(context).colorScheme.primary,
             blurRadius: 15,
             offset: const Offset(5, 5),
           ),

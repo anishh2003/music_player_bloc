@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/neu_box.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class SongPage extends StatefulWidget {
   const SongPage({Key? key}) : super(key: key);
@@ -13,7 +12,7 @@ class _SongPageState extends State<SongPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -63,7 +62,9 @@ class _SongPageState extends State<SongPage> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
-                                    color: Colors.grey.shade700,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .inversePrimary,
                                   ),
                                 ),
                                 const SizedBox(height: 6),
@@ -109,7 +110,7 @@ class _SongPageState extends State<SongPage> {
                 // linear bar
                 SliderTheme(
                   data: SliderTheme.of(context).copyWith(
-                    inactiveTrackColor: Colors.grey.shade500,
+                    inactiveTrackColor: Theme.of(context).colorScheme.primary,
                     thumbShape: const RoundSliderThumbShape(
                       enabledThumbRadius: 8,
                     ),
