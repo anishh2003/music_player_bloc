@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_player/cubit/theme_cubit.dart';
@@ -38,28 +39,33 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
             const SizedBox(height: 20.0),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Dark theme : ",
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                BlocBuilder<ThemeCubit, bool>(
-                  builder: (context, state) {
-                    return Switch(
-                      // This bool value toggles the switch.
-                      value: state,
-
-                      activeColor: Theme.of(context).colorScheme.primary,
-                      onChanged: (bool value) {
-                        darkThemeCubit.changeTheme();
-                      },
-                    );
-                  },
-                ),
-              ],
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondary,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Dark theme : ",
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  BlocBuilder<ThemeCubit, bool>(
+                    builder: (context, state) {
+                      return CupertinoSwitch(
+                        value: state,
+                        onChanged: (bool value) {
+                          darkThemeCubit.changeTheme();
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
             )
           ],
         ),
