@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:music_player/bloc/song_playlist_bloc.dart';
 import 'package:music_player/cubit/theme_cubit.dart';
 import 'package:music_player/song_page.dart';
 import 'package:music_player/theme/dart_theme.dart';
@@ -14,8 +15,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ThemeCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ThemeCubit(),
+        ),
+        BlocProvider(
+          create: (context) => SongPlaylistBloc(),
+        )
+      ],
       child: BlocBuilder<ThemeCubit, bool>(
         builder: (context, state) {
           return MaterialApp(

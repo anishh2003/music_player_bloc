@@ -1,6 +1,12 @@
 part of 'song_playlist_bloc.dart';
 
 @immutable
-sealed class SongPlaylistState {}
+sealed class SongPlaylistState {
+  List<Song> songList = [];
 
-final class SongPlaylistInitial extends SongPlaylistState {}
+  SongPlaylistState(this.songList);
+}
+
+final class SongPlaylistInitial extends SongPlaylistState {
+  SongPlaylistInitial(super.songList);
+}

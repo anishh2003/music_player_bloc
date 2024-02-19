@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/neu_box.dart';
+import 'package:music_player/screens/playlist_page.dart';
 import 'package:music_player/widgets/drawer_widget.dart';
 
 class SongPage extends StatefulWidget {
@@ -37,19 +38,27 @@ class _SongPageState extends State<SongPage> {
                 const SizedBox(height: 10),
 
                 // back button and menu button
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 60,
                       width: 60,
                       child: NeuBox(child: Icon(Icons.arrow_back)),
                     ),
-                    Text('P L A Y L I S T'),
+                    const Text('P L A Y L I S T'),
                     SizedBox(
                       height: 60,
                       width: 60,
-                      child: NeuBox(child: Icon(Icons.music_note)),
+                      child: NeuBox(
+                          child: IconButton(
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const PlayListPage(),
+                          ),
+                        ),
+                        icon: const Icon(Icons.music_note),
+                      )),
                     ),
                   ],
                 ),
