@@ -62,7 +62,7 @@ class _SongPageState extends State<SongPage> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.asset('lib/images/cover_art.png'),
+                        child: Image.asset('lib/assets/images/MusicbyAden.png'),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
