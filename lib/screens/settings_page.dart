@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:music_player/cubit/theme_cubit.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -10,8 +12,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    // var darkThemetoggleValue = ref.watch(usersSettingsProvider);
-    // var darkTheme = ref.watch(darkThemeProvider);
+    var darkThemeCubit = BlocProvider.of<ThemeCubit>(context);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Padding(
@@ -45,16 +46,17 @@ class _SettingsPageState extends State<SettingsPage> {
                   "Dark theme : ",
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
-                Switch(
-                  // This bool value toggles the switch.
-                  value: true, //darkTheme,
+                BlocBuilder<ThemeCubit, bool>(
+                  builder: (context, state) {
+                    return Switch(
+                      // This bool value toggles the switch.
+                      value: state,
 
-                  activeColor: Theme.of(context).colorScheme.primary,
-                  onChanged: (bool value) async {
-                    // ref
-                    //     .read(darkThemeProvider.notifier)
-                    //     .update((state) => value);
-                    // await darkThemetoggleValue.setUsersThemeSettings(value);
+                      activeColor: Theme.of(context).colorScheme.primary,
+                      onChanged: (bool value) {
+                        darkThemeCubit.changeTheme();
+                      },
+                    );
                   },
                 ),
               ],
