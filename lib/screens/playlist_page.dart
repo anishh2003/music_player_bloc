@@ -31,9 +31,12 @@ class PlayListPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Card(
                       child: ListTile(
-                        leading: Image.asset(
-                          state.songList[index].albumArtImagePath,
-                          scale: 2,
+                        leading: SizedBox(
+                          width: 60.0,
+                          height: 60.0,
+                          child: Image.asset(
+                              state.songList[index].albumArtImagePath,
+                              fit: BoxFit.cover),
                         ),
                         title: Text(state.songList[index].songName),
                         subtitle: Text(state.songList[index].artistName),
