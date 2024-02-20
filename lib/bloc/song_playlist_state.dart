@@ -23,3 +23,16 @@ final class SongPlaylistError extends SongPlaylistState {
   final String error;
   SongPlaylistError({required this.error}) : super(songList);
 }
+
+final class FetchingSong extends SongPlaylistState {
+  FetchingSong() : super(songList);
+}
+
+final class SongisPlaying extends SongPlaylistState {
+  final Song song;
+  SongisPlaying({required this.song}) : super(songList);
+}
+
+final class SongIsPaused extends SongPlaylistState {
+  SongIsPaused() : super(songList);
+}
