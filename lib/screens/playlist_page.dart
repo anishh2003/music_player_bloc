@@ -5,12 +5,12 @@ import 'package:music_player/models/song.dart';
 import 'package:music_player/song_page.dart';
 
 class PlayListPage extends StatelessWidget {
-  PlayListPage({
+  const PlayListPage({
     super.key,
     required this.song,
   });
 
-  Song song;
+  final Song song;
 
   @override
   Widget build(BuildContext context) {

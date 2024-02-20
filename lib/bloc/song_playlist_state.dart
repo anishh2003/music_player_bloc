@@ -2,11 +2,24 @@ part of 'song_playlist_bloc.dart';
 
 @immutable
 sealed class SongPlaylistState {
-  List<Song> songList = [];
+  final List<Song> songList;
 
-  SongPlaylistState(this.songList);
+  const SongPlaylistState(this.songList);
 }
 
 final class SongPlaylistInitial extends SongPlaylistState {
-  SongPlaylistInitial(super.songList);
+  const SongPlaylistInitial(super.songList);
+}
+
+final class SongPlaylistLoading extends SongPlaylistState {
+  const SongPlaylistLoading(super.songList);
+}
+
+final class SongPlaylistLoaded extends SongPlaylistState {
+  const SongPlaylistLoaded(super.songList);
+}
+
+final class SongPlaylistError extends SongPlaylistState {
+  final String error;
+  SongPlaylistError({required this.error}) : super(songList);
 }
