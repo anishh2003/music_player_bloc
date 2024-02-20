@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/models/song.dart';
 import 'package:music_player/neu_box.dart';
 import 'package:music_player/screens/playlist_page.dart';
 import 'package:music_player/widgets/drawer_widget.dart';
 
 class SongPage extends StatefulWidget {
-  const SongPage({Key? key}) : super(key: key);
+  SongPage({
+    Key? key,
+    required this.song,
+  }) : super(key: key);
+
+  Song song;
 
   @override
   State<SongPage> createState() => _SongPageState();
@@ -54,7 +60,9 @@ class _SongPageState extends State<SongPage> {
                           child: IconButton(
                         onPressed: () => Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const PlayListPage(),
+                            builder: (context) => PlayListPage(
+                              song: widget.song,
+                            ),
                           ),
                         ),
                         icon: const Icon(Icons.music_note),
@@ -71,7 +79,13 @@ class _SongPageState extends State<SongPage> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.asset('lib/assets/images/MusicbyAden.png'),
+                        child: SizedBox(
+                            width: 400,
+                            height: 300,
+                            child: Image.asset(
+                              widget.song.albumArtImagePath,
+                              fit: BoxFit.cover,
+                            )),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -82,7 +96,7 @@ class _SongPageState extends State<SongPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Kota The Friend',
+                                  widget.song.songName,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
@@ -92,9 +106,9 @@ class _SongPageState extends State<SongPage> {
                                   ),
                                 ),
                                 const SizedBox(height: 6),
-                                const Text(
-                                  'Birdie',
-                                  style: TextStyle(
+                                Text(
+                                  widget.song.artistName,
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 22,
                                   ),

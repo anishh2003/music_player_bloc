@@ -1,8 +1,7 @@
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_player/data/music_data.dart';
 import 'package:music_player/models/song.dart';
-
+import 'package:flutter/foundation.dart';
 part 'song_playlist_event.dart';
 part 'song_playlist_state.dart';
 
