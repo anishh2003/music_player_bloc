@@ -25,8 +25,8 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   final player = AudioPlayer();
   int _currentIndex = 0;
-  Duration _currentDuration = Duration.zero;
-  Duration _totalDuration = Duration.zero;
+  String _currentDuration = '0:00';
+  String _totalDuration = '0:00';
 
   // void _onLoadToDo(SongPlaylistEvent event, Emitter<SongPlaylistState> emit) {
   //   emit(SongPlaylistInitial(songList));
@@ -44,7 +44,9 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
         .indexWhere((element) => songList.indexOf(element) == _currentIndex);
     Song newSong = songList[newSongIndex];
     await player.stop();
+    setSongDuration();
     await player.play(AssetSource(newSong.audioPath));
+
     emit(SongisPlaying());
   }
 
@@ -104,13 +106,24 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     return _currentIndex;
   }
 
-  void listenToDuration() {
+  void setSongDuration() {
     player.onDurationChanged.listen((Duration newDuration) {
-      _totalDuration = newDuration;
+      _totalDuration = _formatTime(newDuration);
     });
 
     player.onPositionChanged.listen((Duration newPosition) {
-      _currentDuration = newPosition;
+      _currentDuration = _formatTime(newPosition);
     });
   }
+
+  String _formatTime(Duration duration) {
+    String twoDigitSeconds = duration.inSeconds.remainder(60).toString();
+    String formatedTime = "${duration.inMinutes} : ${twoDigitSeconds}";
+
+    return formatedTime;
+  }
+
+  String get currentDuration => _currentDuration;
+
+  String get songDuration => _totalDuration;
 }

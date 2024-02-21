@@ -33,11 +33,17 @@ class _SongPageState extends State<SongPage> {
           builder: (context, state) {
             var currentIndex = context.read<SongPlaylistBloc>().currentIndex;
             var currentSong = state.songList[currentIndex];
+            var totalDuration = context.read<SongPlaylistBloc>().songDuration;
+            var currentDuration =
+                context.read<SongPlaylistBloc>().currentDuration;
 
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: BlocBuilder<SongPlaylistBloc, SongPlaylistState>(
+                child: BlocConsumer<SongPlaylistBloc, SongPlaylistState>(
+                  listener: (context, state) {
+                    // return;
+                  },
                   builder: (context, state) {
                     return Column(
                       children: [
@@ -136,15 +142,15 @@ class _SongPageState extends State<SongPage> {
                         const SizedBox(height: 30),
 
                         // start time, shuffle button, repeat button, end time
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('0:00'),
+                              Text(currentDuration),
                               Icon(Icons.shuffle),
                               Icon(Icons.repeat),
-                              Text('4:22')
+                              Text(totalDuration),
                             ],
                           ),
                         ),
