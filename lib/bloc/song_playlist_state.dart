@@ -29,8 +29,7 @@ final class FetchingSong extends SongPlaylistState {
 }
 
 final class SongisPlaying extends SongPlaylistState {
-  final Song song;
-  SongisPlaying({required this.song}) : super(songList);
+  SongisPlaying() : super(songList);
 }
 
 final class SongIsPaused extends SongPlaylistState {

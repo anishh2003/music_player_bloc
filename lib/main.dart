@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
             themeMode: state == false ? ThemeMode.light : ThemeMode.dark,
             debugShowCheckedModeBanner: false,
             home: SongPage(
-              song: songList[0],
-            ),
+                // song: songList[0],
+                ),
           );
         },
       ),

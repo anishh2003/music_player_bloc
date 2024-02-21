@@ -7,10 +7,7 @@ import 'package:music_player/song_page.dart';
 class PlayListPage extends StatelessWidget {
   const PlayListPage({
     super.key,
-    required this.song,
   });
-
-  final Song song;
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +49,13 @@ class PlayListPage extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
+                        context
+                            .read<SongPlaylistBloc>()
+                            .setCurrentIndex(index, ButtonPressed.play);
+                        context.read<SongPlaylistBloc>().add(PlayTrack());
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) =>
-                                SongPage(song: state.songList[index]),
+                            builder: (context) => SongPage(),
                           ),
                         );
                       },
