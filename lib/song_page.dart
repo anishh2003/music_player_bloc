@@ -178,7 +178,6 @@ class _SongPageState extends State<SongPage> {
 
                         const SizedBox(height: 10),
 
-                        // linear bar
                         SliderTheme(
                           data: SliderTheme.of(context).copyWith(
                             inactiveTrackColor:
@@ -187,20 +186,36 @@ class _SongPageState extends State<SongPage> {
                               enabledThumbRadius: 8,
                             ),
                           ),
-                          child: Slider(
-                            min: 0,
-                            max: totalDuration.inSeconds.toDouble(),
-                            value: currentDuration.inSeconds.toDouble(),
-                            activeColor: Colors.green,
-                            onChanged: (double double) {
-                              context.read<SongPlaylistBloc>().add(
-                                    SliderChange(
-                                      sliderValueDuration:
-                                          Duration(seconds: double.toInt()),
-                                    ),
+                          child: StreamBuilder<Duration>(
+                              stream: context
+                                  .watch<SongPlaylistBloc>()
+                                  .getCurrentSonglDuration(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Slider(
+                                    min: 0,
+                                    max: totalDuration.inSeconds.toDouble(),
+                                    value: snapshot.data!.inSeconds.toDouble(),
+                                    activeColor: Colors.green,
+                                    onChanged: (double double) {
+                                      context.read<SongPlaylistBloc>().add(
+                                            SliderChange(
+                                              sliderValueDuration: Duration(
+                                                  seconds: double.toInt()),
+                                            ),
+                                          );
+                                    },
                                   );
-                            },
-                          ),
+                                } else {
+                                  return const Slider(
+                                    min: 0,
+                                    max: 0,
+                                    value: 0,
+                                    activeColor: Colors.green,
+                                    onChanged: null,
+                                  );
+                                }
+                              }),
                         ),
 
                         const SizedBox(height: 30),

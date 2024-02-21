@@ -30,7 +30,6 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   int _currentIndex = 0;
   Duration _currentDuration = Duration.zero;
   Duration _totalDuration = Duration.zero;
-  Duration _seekDuration = Duration.zero;
 
   // void _onLoadToDo(SongPlaylistEvent event, Emitter<SongPlaylistState> emit) {
   //   emit(SongPlaylistInitial(songList));
