@@ -9,6 +9,7 @@ part 'song_playlist_state.dart';
 enum ButtonPressed {
   previous,
   play,
+  pause,
   next,
 }
 
@@ -17,6 +18,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     // on<SongPlaylistEvent>(_onLoadToDo);
     on<PlayTrack>(_onPlay);
     on<PauseTrack>(_onPause);
+    on<ResumeTrack>(_onResume);
     on<NextTrack>(_onNext);
     on<PreviousTrack>(_onPrevious);
   }
@@ -50,13 +52,19 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     emit(SongIsPaused());
   }
 
+  Future<void> _onResume(
+      ResumeTrack event, Emitter<SongPlaylistState> emit) async {
+    await player.resume();
+    emit(SongResumed());
+  }
+
   Future<void> _onNext(NextTrack event, Emitter<SongPlaylistState> emit) async {
     int newSongIndex = songList
         .indexWhere((element) => songList.indexOf(element) == _currentIndex);
     Song newSong = songList[newSongIndex];
     await player.stop();
     await player.play(AssetSource(newSong.audioPath));
-    emit(SongIsPaused());
+    emit(SongisPlaying());
   }
 
   Future<void> _onPrevious(
@@ -66,7 +74,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     Song newSong = songList[newSongIndex];
     await player.stop();
     await player.play(AssetSource(newSong.audioPath));
-    emit(SongIsPaused());
+    emit(SongisPlaying());
   }
 
   int get currentIndex => _currentIndex;
@@ -80,6 +88,8 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
       }
     }
     if (buttonPressed == ButtonPressed.play) {
+      _currentIndex = value;
+    } else if (buttonPressed == ButtonPressed.pause) {
       _currentIndex = value;
     } else {
       if (value >= songList.length - 1) {

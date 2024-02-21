@@ -5,11 +5,9 @@ sealed class SongPlaylistEvent {}
 
 final class PlayTrack extends SongPlaylistEvent {}
 
-final class PauseTrack extends SongPlaylistEvent {
-  final Song song;
+final class PauseTrack extends SongPlaylistEvent {}
 
-  PauseTrack({required this.song});
-}
+final class ResumeTrack extends SongPlaylistEvent {}
 
 final class PreviousTrack extends SongPlaylistEvent {}
 

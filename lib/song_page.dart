@@ -1,8 +1,6 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_player/bloc/song_playlist_bloc.dart';
-import 'package:music_player/models/song.dart';
 import 'package:music_player/neu_box.dart';
 import 'package:music_player/screens/playlist_page.dart';
 import 'package:music_player/widgets/drawer_widget.dart';
@@ -17,6 +15,14 @@ class SongPage extends StatefulWidget {
 }
 
 class _SongPageState extends State<SongPage> {
+  @override
+  void initState() {
+    // context.read<SongPlaylistBloc>().setCurrentIndex(0, ButtonPressed.pause);
+    // context.read<SongPlaylistBloc>().add(PlayTrack());
+    // context.read<SongPlaylistBloc>().add(PauseTrack());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -194,13 +200,13 @@ class _SongPageState extends State<SongPage> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20.0),
                                   child: NeuBox(
-                                    child: state is SongisPlaying
+                                    child: (state is SongisPlaying) ||
+                                            (state is SongResumed)
                                         ? IconButton(
                                             onPressed: () async {
                                               context
                                                   .read<SongPlaylistBloc>()
-                                                  .add(PauseTrack(
-                                                      song: currentSong));
+                                                  .add(PauseTrack());
                                             },
                                             icon: const Icon(
                                               Icons.pause,
@@ -211,7 +217,7 @@ class _SongPageState extends State<SongPage> {
                                             onPressed: () async {
                                               context
                                                   .read<SongPlaylistBloc>()
-                                                  .add(PlayTrack());
+                                                  .add(ResumeTrack());
                                             },
                                             icon: const Icon(
                                               Icons.play_arrow,
