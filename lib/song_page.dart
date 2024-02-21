@@ -6,7 +6,7 @@ import 'package:music_player/screens/playlist_page.dart';
 import 'package:music_player/widgets/drawer_widget.dart';
 
 class SongPage extends StatefulWidget {
-  SongPage({
+  const SongPage({
     Key? key,
   }) : super(key: key);
 
@@ -16,8 +16,9 @@ class SongPage extends StatefulWidget {
 
 class _SongPageState extends State<SongPage> {
   String formatTime(Duration duration) {
-    String twoDigitSeconds = duration.inSeconds.remainder(60).toString();
-    String formatedTime = "${duration.inMinutes} : ${twoDigitSeconds}";
+    String twoDigitSeconds =
+        duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+    String formatedTime = "${duration.inMinutes} : $twoDigitSeconds";
 
     return formatedTime;
   }
@@ -143,7 +144,7 @@ class _SongPageState extends State<SongPage> {
 
                         // start time, shuffle button, repeat button, end time
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -198,14 +199,6 @@ class _SongPageState extends State<SongPage> {
                                           Duration(seconds: double.toInt()),
                                     ),
                                   );
-                              // context.read<SongPlaylistBloc>().setSeekDuration(
-                              //     Duration(seconds: double.toInt()));
-                              //    setState(() {
-                              // context
-                              //     .read<SongPlaylistBloc>()
-                              //     .setSeekDuration(
-                              //         Duration(seconds: double.toInt()));
-                              // });
                             },
                           ),
                         ),
