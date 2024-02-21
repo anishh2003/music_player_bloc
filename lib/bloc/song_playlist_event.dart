@@ -24,3 +24,9 @@ final class ReplayTrack extends SongPlaylistEvent {
 
   ReplayTrack({required this.song});
 }
+
+final class SliderChange extends SongPlaylistEvent {
+  final Duration sliderValueDuration;
+
+  SliderChange({required this.sliderValueDuration});
+}

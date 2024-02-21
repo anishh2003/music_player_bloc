@@ -21,12 +21,14 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     on<ResumeTrack>(_onResume);
     on<NextTrack>(_onNext);
     on<PreviousTrack>(_onPrevious);
+    on<SliderChange>(_onSliderChange);
   }
 
   final player = AudioPlayer();
   int _currentIndex = 0;
-  String _currentDuration = '0:00';
-  String _totalDuration = '0:00';
+  Duration _currentDuration = Duration.zero;
+  Duration _totalDuration = Duration.zero;
+  Duration _seekDuration = Duration.zero;
 
   // void _onLoadToDo(SongPlaylistEvent event, Emitter<SongPlaylistState> emit) {
   //   emit(SongPlaylistInitial(songList));
@@ -81,6 +83,12 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     emit(SongisPlaying());
   }
 
+  Future<void> _onSliderChange(
+      SliderChange event, Emitter<SongPlaylistState> emit) async {
+    setSeekDuration(event.sliderValueDuration);
+    emit(SongSeek());
+  }
+
   int get currentIndex => _currentIndex;
 
   int setCurrentIndex(int value, ButtonPressed buttonPressed) {
@@ -108,22 +116,20 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   void setSongDuration() {
     player.onDurationChanged.listen((Duration newDuration) {
-      _totalDuration = _formatTime(newDuration);
+      _totalDuration = newDuration;
     });
 
     player.onPositionChanged.listen((Duration newPosition) {
-      _currentDuration = _formatTime(newPosition);
+      _currentDuration = newPosition;
     });
   }
 
-  String _formatTime(Duration duration) {
-    String twoDigitSeconds = duration.inSeconds.remainder(60).toString();
-    String formatedTime = "${duration.inMinutes} : ${twoDigitSeconds}";
-
-    return formatedTime;
+  void setSeekDuration(Duration position) async {
+    await player.seek(position);
+    _currentDuration = position;
   }
 
-  String get currentDuration => _currentDuration;
+  Duration get currentDuration => _currentDuration;
 
-  String get songDuration => _totalDuration;
+  Duration get songDuration => _totalDuration;
 }

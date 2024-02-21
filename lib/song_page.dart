@@ -15,16 +15,16 @@ class SongPage extends StatefulWidget {
 }
 
 class _SongPageState extends State<SongPage> {
-  @override
-  void initState() {
-    // context.read<SongPlaylistBloc>().setCurrentIndex(0, ButtonPressed.pause);
-    // context.read<SongPlaylistBloc>().add(PlayTrack());
-    // context.read<SongPlaylistBloc>().add(PauseTrack());
-    super.initState();
+  String formatTime(Duration duration) {
+    String twoDigitSeconds = duration.inSeconds.remainder(60).toString();
+    String formatedTime = "${duration.inMinutes} : ${twoDigitSeconds}";
+
+    return formatedTime;
   }
 
   @override
   Widget build(BuildContext context) {
+    // context.watch<SongPlaylistBloc>().currentDuration;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       drawer: const DrawerWidget(),
@@ -147,10 +147,10 @@ class _SongPageState extends State<SongPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(currentDuration),
+                              Text(formatTime(currentDuration)),
                               Icon(Icons.shuffle),
                               Icon(Icons.repeat),
-                              Text(totalDuration),
+                              Text(formatTime(totalDuration)),
                             ],
                           ),
                         ),
@@ -168,10 +168,25 @@ class _SongPageState extends State<SongPage> {
                           ),
                           child: Slider(
                             min: 0,
-                            max: 100,
-                            value: 50,
+                            max: totalDuration.inSeconds.toDouble(),
+                            value: currentDuration.inSeconds.toDouble(),
                             activeColor: Colors.green,
-                            onChanged: (value) {},
+                            onChanged: (double double) {
+                              context.read<SongPlaylistBloc>().add(
+                                    SliderChange(
+                                      sliderValueDuration:
+                                          Duration(seconds: double.toInt()),
+                                    ),
+                                  );
+                              // context.read<SongPlaylistBloc>().setSeekDuration(
+                              //     Duration(seconds: double.toInt()));
+                              //    setState(() {
+                              // context
+                              //     .read<SongPlaylistBloc>()
+                              //     .setSeekDuration(
+                              //         Duration(seconds: double.toInt()));
+                              // });
+                            },
                           ),
                         ),
 
@@ -207,7 +222,8 @@ class _SongPageState extends State<SongPage> {
                                       horizontal: 20.0),
                                   child: NeuBox(
                                     child: (state is SongisPlaying) ||
-                                            (state is SongResumed)
+                                            (state is SongResumed) ||
+                                            (state is SongSeek)
                                         ? IconButton(
                                             onPressed: () async {
                                               context

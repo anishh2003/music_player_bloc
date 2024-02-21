@@ -39,3 +39,7 @@ final class SongIsPaused extends SongPlaylistState {
 final class SongResumed extends SongPlaylistState {
   SongResumed() : super(songList);
 }
+
+final class SongSeek extends SongPlaylistState {
+  SongSeek() : super(songList);
+}
