@@ -117,19 +117,6 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     return _currentIndex;
   }
 
-  // void setSongDuration() {
-  //   player.onDurationChanged.listen((Duration newDuration) {
-  //     _totalDuration = newDuration;
-
-  //     // emit(SongDurationUpdated(newDuration));
-  //   });
-
-  //   player.onPositionChanged.listen((Duration newPosition) {
-  //     _currentDuration = newPosition;
-  //     // emit(SongPositionUpdated(newPosition));
-  //   });
-  // }
-
   Stream<Duration> getSongTotalDuration() {
     return player.onDurationChanged.map((newDuration) {
       _totalDuration = newDuration;
