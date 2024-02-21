@@ -43,3 +43,13 @@ final class SongResumed extends SongPlaylistState {
 final class SongSeek extends SongPlaylistState {
   SongSeek() : super(songList);
 }
+
+final class SongDurationUpdated extends SongPlaylistState {
+  Duration newDuration;
+  SongDurationUpdated(this.newDuration) : super(songList);
+}
+
+final class SongPositionUpdated extends SongPlaylistState {
+  Duration newPosition;
+  SongPositionUpdated(this.newPosition) : super(songList);
+}

@@ -147,10 +147,30 @@ class _SongPageState extends State<SongPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(formatTime(currentDuration)),
-                              Icon(Icons.shuffle),
-                              Icon(Icons.repeat),
-                              Text(formatTime(totalDuration)),
+                              StreamBuilder<Duration>(
+                                  stream: context
+                                      .watch<SongPlaylistBloc>()
+                                      .getCurrentSonglDuration(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text(formatTime(snapshot.data!));
+                                    } else {
+                                      return const CircularProgressIndicator(); // Loading indicator
+                                    }
+                                  }),
+                              const Icon(Icons.shuffle),
+                              const Icon(Icons.repeat),
+                              StreamBuilder<Duration>(
+                                  stream: context
+                                      .watch<SongPlaylistBloc>()
+                                      .getSongTotalDuration(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text(formatTime(snapshot.data!));
+                                    } else {
+                                      return const CircularProgressIndicator(); // Loading indicator
+                                    }
+                                  }),
                             ],
                           ),
                         ),

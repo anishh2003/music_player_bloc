@@ -22,6 +22,8 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     on<NextTrack>(_onNext);
     on<PreviousTrack>(_onPrevious);
     on<SliderChange>(_onSliderChange);
+
+    // setSongDuration();
   }
 
   final player = AudioPlayer();
@@ -46,7 +48,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
         .indexWhere((element) => songList.indexOf(element) == _currentIndex);
     Song newSong = songList[newSongIndex];
     await player.stop();
-    setSongDuration();
+    // setSongDuration();
     await player.play(AssetSource(newSong.audioPath));
 
     emit(SongisPlaying());
@@ -86,6 +88,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   Future<void> _onSliderChange(
       SliderChange event, Emitter<SongPlaylistState> emit) async {
     setSeekDuration(event.sliderValueDuration);
+    // setSongDuration();
     emit(SongSeek());
   }
 
@@ -114,19 +117,36 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     return _currentIndex;
   }
 
-  void setSongDuration() {
-    player.onDurationChanged.listen((Duration newDuration) {
-      _totalDuration = newDuration;
-    });
+  // void setSongDuration() {
+  //   player.onDurationChanged.listen((Duration newDuration) {
+  //     _totalDuration = newDuration;
 
-    player.onPositionChanged.listen((Duration newPosition) {
+  //     // emit(SongDurationUpdated(newDuration));
+  //   });
+
+  //   player.onPositionChanged.listen((Duration newPosition) {
+  //     _currentDuration = newPosition;
+  //     // emit(SongPositionUpdated(newPosition));
+  //   });
+  // }
+
+  Stream<Duration> getSongTotalDuration() {
+    return player.onDurationChanged.map((newDuration) {
+      _totalDuration = newDuration;
+      return _totalDuration;
+    });
+  }
+
+  Stream<Duration> getCurrentSonglDuration() {
+    return player.onPositionChanged.map((newPosition) {
       _currentDuration = newPosition;
+      return _currentDuration;
     });
   }
 
   void setSeekDuration(Duration position) async {
     await player.seek(position);
-    _currentDuration = position;
+    // _currentDuration = position;
   }
 
   Duration get currentDuration => _currentDuration;
