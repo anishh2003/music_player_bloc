@@ -20,21 +20,8 @@ class _SongPageState extends State<SongPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.background,
-        title: Text(
-          'Music Player',
-          style: Theme.of(context).textTheme.headlineLarge,
-        ),
-        iconTheme: IconThemeData(
-            size: 30.0,
-            color: Theme.of(context)
-                .colorScheme
-                .inversePrimary), //changes the drawer burger button icon color
-      ),
-      drawer: const DrawerWidget(),
       backgroundColor: Theme.of(context).colorScheme.background,
+      drawer: const DrawerWidget(),
       body: SafeArea(
         child: BlocBuilder<SongPlaylistBloc, SongPlaylistState>(
           builder: (context, state) {
@@ -43,21 +30,30 @@ class _SongPageState extends State<SongPage> {
 
             return SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: BlocBuilder<SongPlaylistBloc, SongPlaylistState>(
                   builder: (context, state) {
                     return Column(
                       children: [
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 50),
 
                         // back button and menu button
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const SizedBox(
+                            SizedBox(
                               height: 60,
                               width: 60,
-                              child: NeuBox(child: Icon(Icons.arrow_back)),
+                              child: NeuBox(
+                                  child: IconButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const PlayListPage(),
+                                            ),
+                                          ),
+                                      icon: const Icon(Icons.arrow_back))),
                             ),
                             const Text('P L A Y L I S T'),
                             SizedBox(
@@ -65,14 +61,9 @@ class _SongPageState extends State<SongPage> {
                               width: 60,
                               child: NeuBox(
                                   child: IconButton(
-                                onPressed: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => PlayListPage(
-                                        // song: widget.song,
-                                        ),
-                                  ),
-                                ),
-                                icon: const Icon(Icons.music_note),
+                                onPressed: () =>
+                                    Scaffold.of(context).openDrawer(),
+                                icon: const Icon(Icons.menu),
                               )),
                             ),
                           ],

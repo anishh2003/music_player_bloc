@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_player/bloc/song_playlist_bloc.dart';
 import 'package:music_player/models/song.dart';
 import 'package:music_player/song_page.dart';
+import 'package:music_player/widgets/drawer_widget.dart';
 
 class PlayListPage extends StatelessWidget {
   const PlayListPage({
@@ -27,6 +28,7 @@ class PlayListPage extends StatelessWidget {
                     .colorScheme
                     .inversePrimary), //changes the drawer burger button icon color
           ),
+          drawer: const DrawerWidget(),
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(10.0),
