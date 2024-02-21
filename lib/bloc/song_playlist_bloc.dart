@@ -25,6 +25,8 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   final player = AudioPlayer();
   int _currentIndex = 0;
+  Duration _currentDuration = Duration.zero;
+  Duration _totalDuration = Duration.zero;
 
   // void _onLoadToDo(SongPlaylistEvent event, Emitter<SongPlaylistState> emit) {
   //   emit(SongPlaylistInitial(songList));
@@ -100,5 +102,15 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     }
 
     return _currentIndex;
+  }
+
+  void listenToDuration() {
+    player.onDurationChanged.listen((Duration newDuration) {
+      _totalDuration = newDuration;
+    });
+
+    player.onPositionChanged.listen((Duration newPosition) {
+      _currentDuration = newPosition;
+    });
   }
 }
