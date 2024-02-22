@@ -132,13 +132,12 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   int setCurrentIndex(int value, ButtonPressed buttonPressed) {
     if (buttonPressed == ButtonPressed.previous) {
-      if (value < 0) {
+      if (value <= 0) {
         _currentIndex = 0;
       } else {
         _currentIndex = value - 1;
       }
-    }
-    if (buttonPressed == ButtonPressed.play) {
+    } else if (buttonPressed == ButtonPressed.play) {
       _currentIndex = value;
     } else if (buttonPressed == ButtonPressed.pause) {
       _currentIndex = value;
