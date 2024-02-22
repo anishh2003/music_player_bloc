@@ -25,7 +25,6 @@ class _SongPageState extends State<SongPage> {
 
   @override
   Widget build(BuildContext context) {
-    // context.watch<SongPlaylistBloc>().currentDuration;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       drawer: const DrawerWidget(),
@@ -172,45 +171,29 @@ class _SongPageState extends State<SongPage> {
 
                         const SizedBox(height: 10),
 
-                        // SliderTheme(
-                        //   data: SliderTheme.of(context).copyWith(
-                        //     inactiveTrackColor:
-                        //         Theme.of(context).colorScheme.primary,
-                        //     thumbShape: const RoundSliderThumbShape(
-                        //       enabledThumbRadius: 8,
-                        //     ),
-                        //   ),
-                        //   child: StreamBuilder<Duration>(
-                        //       stream: context
-                        //           .watch<SongPlaylistBloc>()
-                        //           .getCurrentSonglDuration(),
-                        //       builder: (context, snapshot) {
-                        //         if (snapshot.hasData) {
-                        //           return Slider(
-                        //             min: 0,
-                        //             max: totalDuration.inSeconds.toDouble(),
-                        //             value: snapshot.data!.inSeconds.toDouble(),
-                        //             activeColor: Colors.green,
-                        //             onChanged: (double double) {
-                        //               context.read<SongPlaylistBloc>().add(
-                        //                     SliderChange(
-                        //                       sliderValueDuration: Duration(
-                        //                           seconds: double.toInt()),
-                        //                     ),
-                        //                   );
-                        //             },
-                        //           );
-                        //         } else {
-                        //           return const Slider(
-                        //             min: 0,
-                        //             max: 0,
-                        //             value: 0,
-                        //             activeColor: Colors.green,
-                        //             onChanged: null,
-                        //           );
-                        //         }
-                        //       }),
-                        // ),
+                        SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            inactiveTrackColor:
+                                Theme.of(context).colorScheme.primary,
+                            thumbShape: const RoundSliderThumbShape(
+                              enabledThumbRadius: 8,
+                            ),
+                          ),
+                          child: Slider(
+                            min: 0,
+                            max: totalDuration.inSeconds.toDouble(),
+                            value: currentDuration.inSeconds.toDouble(),
+                            activeColor: Colors.green,
+                            onChanged: (double double) {
+                              context.read<SongPlaylistBloc>().add(
+                                    SliderChange(
+                                      sliderValueDuration:
+                                          Duration(seconds: double.toInt()),
+                                    ),
+                                  );
+                            },
+                          ),
+                        ),
 
                         const SizedBox(height: 30),
 
@@ -243,8 +226,7 @@ class _SongPageState extends State<SongPage> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20.0),
                                   child: NeuBox(
-                                    child: (state is SongisPlaying) ||
-                                            (state is SongResumed) ||
+                                    child: (state is SongPositionUpdated) ||
                                             (state is SongSeek)
                                         ? IconButton(
                                             onPressed: () async {
