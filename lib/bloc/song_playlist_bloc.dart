@@ -25,6 +25,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     on<UpdateCurrentDuration>(_onUpdatedCurrentDuration);
     on<UpdateTotalDuration>(_onUpdatedTotalDuration);
     on<SliderChange>(_onSliderChange);
+    on<SongCompleted>(_onSongCompleted);
 
     _initializePlayerSubscriptions(); //keep listening to this function
   }
@@ -52,6 +53,10 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     _positionSubscription = player.onPositionChanged.listen((newPosition) {
       add(UpdateCurrentDuration(
           newPosition: newPosition)); // Dispatch event here
+    });
+
+    player.onPlayerComplete.listen((_) {
+      add(SongCompleted());
     });
   }
 
@@ -113,6 +118,12 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
       UpdateTotalDuration event, Emitter<SongPlaylistState> emit) async {
     _totalDuration = event.newDuration;
     emit(SongDurationUpdated(_totalDuration));
+  }
+
+  void _onSongCompleted(
+      SongCompleted event, Emitter<SongPlaylistState> emit) async {
+    setCurrentIndex(_currentIndex, ButtonPressed.next);
+    add(NextTrack()); //event
   }
 
   int get currentIndex => _currentIndex;

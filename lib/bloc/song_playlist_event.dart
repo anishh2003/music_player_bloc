@@ -13,6 +13,8 @@ final class PreviousTrack extends SongPlaylistEvent {}
 
 final class NextTrack extends SongPlaylistEvent {}
 
+final class SongCompleted extends SongPlaylistEvent {}
+
 final class ShuffleTracks extends SongPlaylistEvent {
   final Song song;
 
