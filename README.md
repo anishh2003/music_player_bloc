@@ -1,3 +1,3 @@
 # music_player
 
-A new Flutter project.
+Bloc Implementation of a Music player app
