@@ -172,10 +172,6 @@ class _SongPageState extends State<SongPage> {
                                                 .colorScheme
                                                 .onBackground),
                                     onPressed: () {
-                                      // context
-                                      //         .read<SongPlaylistBloc>()
-                                      //         .toggleReplay
-                                      //     ?
                                       context
                                           .read<SongPlaylistBloc>()
                                           .onShuffleDisableReplay();
