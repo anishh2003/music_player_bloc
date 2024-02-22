@@ -148,75 +148,69 @@ class _SongPageState extends State<SongPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              StreamBuilder<Duration>(
-                                  stream: context
-                                      .watch<SongPlaylistBloc>()
-                                      .getCurrentSonglDuration(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      return Text(formatTime(snapshot.data!));
-                                    } else {
-                                      return const CircularProgressIndicator(); // Loading indicator
-                                    }
-                                  }),
+                              state is SongPositionUpdated
+                                  ? Text(formatTime(state.newPosition))
+                                  : Text(
+                                      formatTime(
+                                        context
+                                            .watch<SongPlaylistBloc>()
+                                            .currentDuration,
+                                      ),
+                                    ),
                               const Icon(Icons.shuffle),
                               const Icon(Icons.repeat),
-                              StreamBuilder<Duration>(
-                                  stream: context
-                                      .watch<SongPlaylistBloc>()
-                                      .getSongTotalDuration(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      return Text(formatTime(snapshot.data!));
-                                    } else {
-                                      return const CircularProgressIndicator(); // Loading indicator
-                                    }
-                                  }),
+                              state is SongDurationUpdated
+                                  ? Text(formatTime(state.newDuration))
+                                  : Text(formatTime(
+                                      context
+                                          .read<SongPlaylistBloc>()
+                                          .songDuration,
+                                    )),
                             ],
                           ),
                         ),
 
                         const SizedBox(height: 10),
 
-                        SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            inactiveTrackColor:
-                                Theme.of(context).colorScheme.primary,
-                            thumbShape: const RoundSliderThumbShape(
-                              enabledThumbRadius: 8,
-                            ),
-                          ),
-                          child: StreamBuilder<Duration>(
-                              stream: context
-                                  .watch<SongPlaylistBloc>()
-                                  .getCurrentSonglDuration(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return Slider(
-                                    min: 0,
-                                    max: totalDuration.inSeconds.toDouble(),
-                                    value: snapshot.data!.inSeconds.toDouble(),
-                                    activeColor: Colors.green,
-                                    onChanged: (double double) {
-                                      context.read<SongPlaylistBloc>().add(
-                                            SliderChange(
-                                              sliderValueDuration: Duration(
-                                                  seconds: double.toInt()),
-                                            ),
-                                          );
-                                    },
-                                  );
-                                } else {
-                                  return const Slider(
-                                    min: 0,
-                                    max: 0,
-                                    value: 0,
-                                    activeColor: Colors.green,
-                                    onChanged: null,
-                                  );
-                                }
-                              }),
-                        ),
+                        // SliderTheme(
+                        //   data: SliderTheme.of(context).copyWith(
+                        //     inactiveTrackColor:
+                        //         Theme.of(context).colorScheme.primary,
+                        //     thumbShape: const RoundSliderThumbShape(
+                        //       enabledThumbRadius: 8,
+                        //     ),
+                        //   ),
+                        //   child: StreamBuilder<Duration>(
+                        //       stream: context
+                        //           .watch<SongPlaylistBloc>()
+                        //           .getCurrentSonglDuration(),
+                        //       builder: (context, snapshot) {
+                        //         if (snapshot.hasData) {
+                        //           return Slider(
+                        //             min: 0,
+                        //             max: totalDuration.inSeconds.toDouble(),
+                        //             value: snapshot.data!.inSeconds.toDouble(),
+                        //             activeColor: Colors.green,
+                        //             onChanged: (double double) {
+                        //               context.read<SongPlaylistBloc>().add(
+                        //                     SliderChange(
+                        //                       sliderValueDuration: Duration(
+                        //                           seconds: double.toInt()),
+                        //                     ),
+                        //                   );
+                        //             },
+                        //           );
+                        //         } else {
+                        //           return const Slider(
+                        //             min: 0,
+                        //             max: 0,
+                        //             value: 0,
+                        //             activeColor: Colors.green,
+                        //             onChanged: null,
+                        //           );
+                        //         }
+                        //       }),
+                        // ),
 
                         const SizedBox(height: 30),
 

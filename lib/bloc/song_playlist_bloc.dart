@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_player/data/music_data.dart';
@@ -21,15 +23,20 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     on<ResumeTrack>(_onResume);
     on<NextTrack>(_onNext);
     on<PreviousTrack>(_onPrevious);
+    on<UpdateCurrentDuration>(_onUpdatedCurrentDuration);
+    on<UpdateTotalDuration>(_onUpdatedTotalDuration);
     on<SliderChange>(_onSliderChange);
 
     // setSongDuration();
+    _initializePlayerSubscriptions();
   }
 
   final player = AudioPlayer();
   int _currentIndex = 0;
   Duration _currentDuration = Duration.zero;
   Duration _totalDuration = Duration.zero;
+  late StreamSubscription<Duration> _durationSubscription;
+  late StreamSubscription<Duration> _positionSubscription;
 
   // void _onLoadToDo(SongPlaylistEvent event, Emitter<SongPlaylistState> emit) {
   //   emit(SongPlaylistInitial(songList));
@@ -40,6 +47,24 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   //     // emit(TodoError(error: e.toString(), const []));
   //   }
   // }
+  @override
+  Future<void> close() {
+    // Cancel subscriptions when closing the bloc
+    _durationSubscription.cancel();
+    _positionSubscription.cancel();
+    return super.close();
+  }
+
+  void _initializePlayerSubscriptions() {
+    _durationSubscription = player.onDurationChanged.listen((newDuration) {
+      add(UpdateTotalDuration(newDuration: newDuration)); // Dispatch event here
+    });
+
+    _positionSubscription = player.onPositionChanged.listen((newPosition) {
+      add(UpdateCurrentDuration(
+          newPosition: newPosition)); // Dispatch event here
+    });
+  }
 
   Future<void> _onPlay(PlayTrack event, Emitter<SongPlaylistState> emit) async {
     emit(FetchingSong());
@@ -91,6 +116,18 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     emit(SongSeek());
   }
 
+  Future<void> _onUpdatedCurrentDuration(
+      UpdateCurrentDuration event, Emitter<SongPlaylistState> emit) async {
+    _currentDuration = event.newPosition;
+    emit(SongPositionUpdated(_currentDuration));
+  }
+
+  Future<void> _onUpdatedTotalDuration(
+      UpdateTotalDuration event, Emitter<SongPlaylistState> emit) async {
+    _totalDuration = event.newDuration;
+    emit(SongDurationUpdated(_totalDuration));
+  }
+
   int get currentIndex => _currentIndex;
 
   int setCurrentIndex(int value, ButtonPressed buttonPressed) {
@@ -114,20 +151,6 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     }
 
     return _currentIndex;
-  }
-
-  Stream<Duration> getSongTotalDuration() {
-    return player.onDurationChanged.map((newDuration) {
-      _totalDuration = newDuration;
-      return _totalDuration;
-    });
-  }
-
-  Stream<Duration> getCurrentSonglDuration() {
-    return player.onPositionChanged.map((newPosition) {
-      _currentDuration = newPosition;
-      return _currentDuration;
-    });
   }
 
   void setSeekDuration(Duration position) async {

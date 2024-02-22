@@ -30,3 +30,15 @@ final class SliderChange extends SongPlaylistEvent {
 
   SliderChange({required this.sliderValueDuration});
 }
+
+final class UpdateTotalDuration extends SongPlaylistEvent {
+  final Duration newDuration;
+
+  UpdateTotalDuration({required this.newDuration});
+}
+
+final class UpdateCurrentDuration extends SongPlaylistEvent {
+  final Duration newPosition;
+
+  UpdateCurrentDuration({required this.newPosition});
+}
