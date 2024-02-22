@@ -15,17 +15,9 @@ final class NextTrack extends SongPlaylistEvent {}
 
 final class SongCompleted extends SongPlaylistEvent {}
 
-final class ShuffleTracks extends SongPlaylistEvent {
-  final Song song;
+final class ShuffleTracks extends SongPlaylistEvent {}
 
-  ShuffleTracks({required this.song});
-}
-
-final class ReplayTrack extends SongPlaylistEvent {
-  final Song song;
-
-  ReplayTrack({required this.song});
-}
+final class ReplayTrack extends SongPlaylistEvent {}
 
 final class SliderChange extends SongPlaylistEvent {
   final Duration sliderValueDuration;

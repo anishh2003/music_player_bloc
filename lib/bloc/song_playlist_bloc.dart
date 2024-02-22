@@ -26,6 +26,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     on<UpdateTotalDuration>(_onUpdatedTotalDuration);
     on<SliderChange>(_onSliderChange);
     on<SongCompleted>(_onSongCompleted);
+    on<ReplayTrack>(_onReplay);
 
     _initializePlayerSubscriptions(); //keep listening to this function
   }
@@ -36,6 +37,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   Duration _totalDuration = Duration.zero;
   late StreamSubscription<Duration> _durationSubscription;
   late StreamSubscription<Duration> _positionSubscription;
+  bool _toogleReplay = false;
 
   @override
   Future<void> close() {
@@ -56,7 +58,11 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     });
 
     player.onPlayerComplete.listen((_) {
-      add(SongCompleted());
+      if (_toogleReplay) {
+        add(ReplayTrack());
+      } else {
+        add(SongCompleted());
+      }
     });
   }
 
@@ -100,6 +106,16 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     await player.stop();
     await player.play(AssetSource(newSong.audioPath));
     emit(SongisPlaying());
+  }
+
+  Future<void> _onReplay(
+      ReplayTrack event, Emitter<SongPlaylistState> emit) async {
+    int newSongIndex = songList
+        .indexWhere((element) => songList.indexOf(element) == _currentIndex);
+    Song newSong = songList[newSongIndex];
+    await player.stop();
+    await player.play(AssetSource(newSong.audioPath));
+    emit(SongReplay());
   }
 
   Future<void> _onSliderChange(
@@ -152,10 +168,15 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   void setSeekDuration(Duration position) async {
     await player.seek(position);
-    // _currentDuration = position;
+  }
+
+  void setToggleReplay() {
+    _toogleReplay = !_toogleReplay;
   }
 
   Duration get currentDuration => _currentDuration;
 
   Duration get songDuration => _totalDuration;
+
+  bool get toggleReplay => _toogleReplay;
 }

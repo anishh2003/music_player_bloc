@@ -157,7 +157,26 @@ class _SongPageState extends State<SongPage> {
                                       ),
                                     ),
                               const Icon(Icons.shuffle),
-                              const Icon(Icons.repeat),
+                              IconButton(
+                                onPressed: () {
+                                  context
+                                      .read<SongPlaylistBloc>()
+                                      .add(ReplayTrack());
+                                },
+                                icon: IconButton(
+                                  icon: Icon(Icons.repeat,
+                                      color: context
+                                              .read<SongPlaylistBloc>()
+                                              .toggleReplay
+                                          ? Colors.green
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .onBackground),
+                                  onPressed: () => context
+                                      .read<SongPlaylistBloc>()
+                                      .setToggleReplay(),
+                                ),
+                              ),
                               state is SongDurationUpdated
                                   ? Text(formatTime(state.newDuration))
                                   : Text(formatTime(
