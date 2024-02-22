@@ -27,8 +27,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     on<UpdateTotalDuration>(_onUpdatedTotalDuration);
     on<SliderChange>(_onSliderChange);
 
-    // setSongDuration();
-    _initializePlayerSubscriptions();
+    _initializePlayerSubscriptions(); //keep listening to this function
   }
 
   final player = AudioPlayer();
@@ -112,7 +111,6 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   Future<void> _onSliderChange(
       SliderChange event, Emitter<SongPlaylistState> emit) async {
     setSeekDuration(event.sliderValueDuration);
-    // setSongDuration();
     emit(SongSeek());
   }
 
