@@ -29,6 +29,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     on<SongCompleted>(_onSongCompleted);
     on<ReplayTrack>(_onReplay);
     on<ShuffleTracks>(_onShuffle);
+    on<ReplayShuffleToggle>(_onReplayShuffleToggle);
 
     _initializePlayerSubscriptions(); //keep listening to this function
   }
@@ -92,6 +93,11 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
       ResumeTrack event, Emitter<SongPlaylistState> emit) async {
     await player.resume();
     emit(SongResumed());
+  }
+
+  Future<void> _onReplayShuffleToggle(
+      ReplayShuffleToggle event, Emitter<SongPlaylistState> emit) async {
+    emit(ReplayShuffleToggleState());
   }
 
   Future<void> _onNext(NextTrack event, Emitter<SongPlaylistState> emit) async {
@@ -190,10 +196,12 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   void setToggleReplay() {
     _toggleReplay = !_toggleReplay;
+    add(ReplayShuffleToggle());
   }
 
   void setToggleShuffle() {
     _toggleShuffle = !_toggleShuffle;
+    add(ReplayShuffleToggle());
   }
 
   void onShuffleDisableReplay() {

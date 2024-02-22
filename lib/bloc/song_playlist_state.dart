@@ -48,6 +48,10 @@ final class SongReplay extends SongPlaylistState {
   SongReplay() : super(songList);
 }
 
+final class ReplayShuffleToggleState extends SongPlaylistState {
+  ReplayShuffleToggleState() : super(songList);
+}
+
 final class SongDurationUpdated extends SongPlaylistState {
   final Duration newDuration;
   SongDurationUpdated(this.newDuration) : super(songList);

@@ -19,6 +19,8 @@ final class ShuffleTracks extends SongPlaylistEvent {}
 
 final class ReplayTrack extends SongPlaylistEvent {}
 
+final class ReplayShuffleToggle extends SongPlaylistEvent {}
+
 final class SliderChange extends SongPlaylistEvent {
   final Duration sliderValueDuration;
 
