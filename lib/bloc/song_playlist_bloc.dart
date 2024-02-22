@@ -125,6 +125,8 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   Future<void> _onShuffle(
       ShuffleTracks event, Emitter<SongPlaylistState> emit) async {
+    _totalDuration = Duration.zero;
+    _currentDuration = Duration.zero;
     _currentIndex = Random().nextInt(songList.length);
     int newSongIndex = songList
         .indexWhere((element) => songList.indexOf(element) == _currentIndex);
@@ -205,8 +207,9 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   Duration get currentDuration =>
       _currentDuration <= Duration.zero ? Duration.zero : _currentDuration;
 
-  Duration get songDuration =>
-      _totalDuration <= Duration.zero ? Duration.zero : _totalDuration;
+  Duration get songDuration {
+    return _totalDuration <= Duration.zero ? Duration.zero : _totalDuration;
+  }
 
   bool get toggleReplay => _toggleReplay;
   bool get toggleShuffle => _toggleShuffle;
