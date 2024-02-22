@@ -194,6 +194,14 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     _toggleShuffle = !_toggleShuffle;
   }
 
+  void onShuffleDisableReplay() {
+    _toggleReplay = false;
+  }
+
+  void onReplayDisableSuffle() {
+    _toggleShuffle = false;
+  }
+
   Duration get currentDuration =>
       _currentDuration <= Duration.zero ? Duration.zero : _currentDuration;
 
