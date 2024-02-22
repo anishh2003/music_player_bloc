@@ -17,7 +17,6 @@ enum ButtonPressed {
 
 class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   SongPlaylistBloc() : super(SongPlaylistInitial(songList)) {
-    // on<SongPlaylistEvent>(_onLoadToDo);
     on<PlayTrack>(_onPlay);
     on<PauseTrack>(_onPause);
     on<ResumeTrack>(_onResume);
@@ -37,15 +36,6 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   late StreamSubscription<Duration> _durationSubscription;
   late StreamSubscription<Duration> _positionSubscription;
 
-  // void _onLoadToDo(SongPlaylistEvent event, Emitter<SongPlaylistState> emit) {
-  //   emit(SongPlaylistInitial(songList));
-  //   try {
-  //     // final tasks = await _taskRepository.getTask();
-  //     // emit(const TodoLoaded([]));
-  //   } catch (e) {
-  //     // emit(TodoError(error: e.toString(), const []));
-  //   }
-  // }
   @override
   Future<void> close() {
     // Cancel subscriptions when closing the bloc
@@ -71,7 +61,6 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
         .indexWhere((element) => songList.indexOf(element) == _currentIndex);
     Song newSong = songList[newSongIndex];
     await player.stop();
-    // setSongDuration();
     await player.play(AssetSource(newSong.audioPath));
 
     emit(SongisPlaying());
