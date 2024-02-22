@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,6 +28,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     on<SliderChange>(_onSliderChange);
     on<SongCompleted>(_onSongCompleted);
     on<ReplayTrack>(_onReplay);
+    on<ShuffleTracks>(_onShuffle);
 
     _initializePlayerSubscriptions(); //keep listening to this function
   }
@@ -37,7 +39,8 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   Duration _totalDuration = Duration.zero;
   late StreamSubscription<Duration> _durationSubscription;
   late StreamSubscription<Duration> _positionSubscription;
-  bool _toogleReplay = false;
+  bool _toggleReplay = false;
+  bool _toggleShuffle = false;
 
   @override
   Future<void> close() {
@@ -58,8 +61,10 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     });
 
     player.onPlayerComplete.listen((_) {
-      if (_toogleReplay) {
+      if (_toggleReplay) {
         add(ReplayTrack());
+      } else if (_toggleShuffle) {
+        add(ShuffleTracks());
       } else {
         add(SongCompleted());
       }
@@ -110,6 +115,17 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   Future<void> _onReplay(
       ReplayTrack event, Emitter<SongPlaylistState> emit) async {
+    int newSongIndex = songList
+        .indexWhere((element) => songList.indexOf(element) == _currentIndex);
+    Song newSong = songList[newSongIndex];
+    await player.stop();
+    await player.play(AssetSource(newSong.audioPath));
+    emit(SongReplay());
+  }
+
+  Future<void> _onShuffle(
+      ShuffleTracks event, Emitter<SongPlaylistState> emit) async {
+    _currentIndex = Random().nextInt(songList.length);
     int newSongIndex = songList
         .indexWhere((element) => songList.indexOf(element) == _currentIndex);
     Song newSong = songList[newSongIndex];
@@ -171,12 +187,17 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   }
 
   void setToggleReplay() {
-    _toogleReplay = !_toogleReplay;
+    _toggleReplay = !_toggleReplay;
+  }
+
+  void setToggleShuffle() {
+    _toggleShuffle = !_toggleShuffle;
   }
 
   Duration get currentDuration => _currentDuration;
 
   Duration get songDuration => _totalDuration;
 
-  bool get toggleReplay => _toogleReplay;
+  bool get toggleReplay => _toggleReplay;
+  bool get toggleShuffle => _toggleShuffle;
 }

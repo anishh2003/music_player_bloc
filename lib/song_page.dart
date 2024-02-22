@@ -156,7 +156,26 @@ class _SongPageState extends State<SongPage> {
                                             .currentDuration,
                                       ),
                                     ),
-                              const Icon(Icons.shuffle),
+                              IconButton(
+                                onPressed: () {
+                                  context
+                                      .read<SongPlaylistBloc>()
+                                      .add(ShuffleTracks());
+                                },
+                                icon: IconButton(
+                                  icon: Icon(Icons.shuffle,
+                                      color: context
+                                              .read<SongPlaylistBloc>()
+                                              .toggleShuffle
+                                          ? Colors.green
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .onBackground),
+                                  onPressed: () => context
+                                      .read<SongPlaylistBloc>()
+                                      .setToggleShuffle(),
+                                ),
+                              ),
                               IconButton(
                                 onPressed: () {
                                   context
