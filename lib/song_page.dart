@@ -149,13 +149,13 @@ class _SongPageState extends State<SongPage> {
                             children: [
                               state is SongPositionUpdated
                                   ? Text(formatTime(state.newPosition))
-                                  : Text('0'
-                                      // formatTime(
-                                      //   context
-                                      //       .watch<SongPlaylistBloc>()
-                                      //       .currentDuration,
-                                      // ),
+                                  : Text(
+                                      formatTime(
+                                        context
+                                            .watch<SongPlaylistBloc>()
+                                            .currentDuration,
                                       ),
+                                    ),
                               IconButton(
                                 onPressed: () {
                                   context
@@ -209,13 +209,13 @@ class _SongPageState extends State<SongPage> {
                               ),
                               state is SongDurationUpdated
                                   ? Text(formatTime(state.newDuration))
-                                  : Text('0'
-                                      // formatTime(
-                                      //   context
-                                      //       .read<SongPlaylistBloc>()
-                                      //       .songDuration,
-                                      // ),
+                                  : Text(
+                                      formatTime(
+                                        context
+                                            .read<SongPlaylistBloc>()
+                                            .totalDuration,
                                       ),
+                                    ),
                             ],
                           ),
                         ),

@@ -203,4 +203,8 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   bool get toggleReplay => _toggleReplay;
   bool get toggleShuffle => _toggleShuffle;
+
+  Duration get currentDuration => _manager.currentDuration;
+
+  Duration get totalDuration => _manager.totalDuration;
 }
