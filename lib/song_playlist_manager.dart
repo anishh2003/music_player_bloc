@@ -1,16 +1,13 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:music_player/bloc/song_playlist_bloc.dart';
 import 'package:music_player/models/song.dart';
 
 class SongPlaylistManager {
   final AudioPlayer player = AudioPlayer();
   late StreamSubscription<Duration> _durationSubscription;
   late StreamSubscription<Duration> _positionSubscription;
-  bool _toggleReplay = false;
-  bool _toggleShuffle = false;
-  late List<Song> _songList;
+  final List<Song> _songList;
   late Duration _currentDuration;
   late Duration _totalDuration;
 
@@ -31,16 +28,6 @@ class SongPlaylistManager {
     player.onPositionChanged.listen((newPosition) {
       _currentDuration = newPosition;
     });
-
-    // player.onPlayerComplete.listen((_) {
-    //   if (_toggleReplay) {
-    //     replay();
-    //   } else if (_toggleShuffle) {
-    //     shuffle();
-    //   } else {
-    //     onSongCompleted();
-    //   }
-    // });
   }
 
   Future<void> dispose() async {
@@ -106,24 +93,15 @@ class SongPlaylistManager {
     _currentDuration = duration;
   }
 
-  // void onSongCompleted() {
-  //   next(index);
-  // }
-
-  // void setToggleReplay() {
-  //   _toggleReplay = !_toggleReplay;
-  // }
-
-  // void setToggleShuffle() {
-  //   _toggleShuffle = !_toggleShuffle;
-  // }
-
+  // ignore: unnecessary_getters_setters
   Duration get currentDuration => _currentDuration;
 
+  // ignore: unnecessary_getters_setters
   Duration get totalDuration => _totalDuration;
 
   Duration get songDuration => _totalDuration;
 
+  // ignore: unnecessary_getters_setters
   int get currentIndex => _currentIndex;
   AudioPlayer get audioplayer => player;
 }

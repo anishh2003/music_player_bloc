@@ -22,7 +22,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     on<ShuffleTracks>(_onShuffle);
     on<ReplayShuffleToggle>(_onReplayShuffleToggle);
 
-    _initializePlayerSubscriptions(); //keep listening to this function
+    _initializeBlocPlayerSubscriptions(); //keep listening to this function
   }
 
   bool _toggleReplay = false;
@@ -37,7 +37,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     return super.close();
   }
 
-  void _initializePlayerSubscriptions() {
+  void _initializeBlocPlayerSubscriptions() {
     _manager.player.onDurationChanged.listen((_) {
       add(UpdateTotalDuration(
           newDuration: _manager.totalDuration)); // Dispatch event here
@@ -87,6 +87,9 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   }
 
   Future<void> _onNext(NextTrack event, Emitter<SongPlaylistState> emit) async {
+    _manager.totalDuration = Duration.zero;
+    _manager.currentDuration = Duration.zero;
+
     _manager.next();
     emit(FetchingSong());
   }
