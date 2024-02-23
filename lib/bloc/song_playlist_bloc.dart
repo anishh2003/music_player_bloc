@@ -83,7 +83,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   Future<void> _onReplayShuffleToggle(
       ReplayShuffleToggle event, Emitter<SongPlaylistState> emit) async {
-    emit(SongReplay());
+    emit(SongisPlaying());
   }
 
   Future<void> _onNext(NextTrack event, Emitter<SongPlaylistState> emit) async {
