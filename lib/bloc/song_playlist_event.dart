@@ -46,3 +46,5 @@ final class UpdateCurrentDuration extends SongPlaylistEvent {
 
   UpdateCurrentDuration({required this.newPosition});
 }
+
+final class ChangesBasedOnPlayerSubscriptions extends SongPlaylistEvent {}

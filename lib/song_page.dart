@@ -156,64 +156,66 @@ class _SongPageState extends State<SongPage> {
                                       //       .currentDuration,
                                       // ),
                                       ),
-                              // IconButton(
-                              //   onPressed: () {
-                              //     context
-                              //         .read<SongPlaylistBloc>()
-                              //         .add(ShuffleTracks());
-                              //   },
-                              //   icon: IconButton(
-                              //       icon: Icon(Icons.shuffle,
-                              //           color: context
-                              //                   .read<SongPlaylistBloc>()
-                              //                   .toggleShuffle
-                              //               ? Colors.green
-                              //               : Theme.of(context)
-                              //                   .colorScheme
-                              //                   .onBackground),
-                              //       onPressed: () {
-                              //         context
-                              //             .read<SongPlaylistBloc>()
-                              //             .onShuffleDisableReplay();
-                              //         context
-                              //             .read<SongPlaylistBloc>()
-                              //             .setToggleShuffle();
-                              //       }),
-                              // ),
-                              // IconButton(
-                              //   onPressed: () {
-                              //     context
-                              //         .read<SongPlaylistBloc>()
-                              //         .setToggleReplay();
-                              //     context
-                              //         .read<SongPlaylistBloc>()
-                              //         .add(ReplayTrack());
-                              //   },
-                              //   icon: IconButton(
-                              //       icon: Icon(Icons.repeat,
-                              //           color: context
-                              //                   .read<SongPlaylistBloc>()
-                              //                   .toggleReplay
-                              //               ? Colors.green
-                              //               : Theme.of(context)
-                              //                   .colorScheme
-                              //                   .onBackground),
-                              //       onPressed: () {
-                              //         context
-                              //             .read<SongPlaylistBloc>()
-                              //             .onReplayDisableSuffle();
-                              //         context
-                              //             .read<SongPlaylistBloc>()
-                              //             .setToggleReplay();
-                              //       }),
-                              // ),
-                              // state is SongDurationUpdated
-                              //     ? Text(formatTime(state.newDuration))
-                              //     : Text(formatTime(
-                              //         context
-                              //             .read<SongPlaylistBloc>()
-                              //             .songDuration,
-                              //       )),
+                              IconButton(
+                                onPressed: () {
+                                  context
+                                      .read<SongPlaylistBloc>()
+                                      .add(ShuffleTracks());
+                                },
+                                icon: IconButton(
+                                    icon: Icon(Icons.shuffle,
+                                        color: context
+                                                .read<SongPlaylistBloc>()
+                                                .toggleShuffle
+                                            ? Colors.green
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .onBackground),
+                                    onPressed: () {
+                                      context
+                                          .read<SongPlaylistBloc>()
+                                          .onShuffleDisableReplay();
+                                      context
+                                          .read<SongPlaylistBloc>()
+                                          .setToggleShuffle();
+                                    }),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  context
+                                      .read<SongPlaylistBloc>()
+                                      .setToggleReplay();
+                                  context
+                                      .read<SongPlaylistBloc>()
+                                      .add(ReplayTrack());
+                                },
+                                icon: IconButton(
+                                    icon: Icon(Icons.repeat,
+                                        color: context
+                                                .read<SongPlaylistBloc>()
+                                                .toggleReplay
+                                            ? Colors.green
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .onBackground),
+                                    onPressed: () {
+                                      context
+                                          .read<SongPlaylistBloc>()
+                                          .onReplayDisableSuffle();
+                                      context
+                                          .read<SongPlaylistBloc>()
+                                          .setToggleReplay();
+                                    }),
+                              ),
+                              state is SongDurationUpdated
+                                  ? Text(formatTime(state.newDuration))
+                                  : Text('0'
+                                      // formatTime(
+                                      //   context
+                                      //       .read<SongPlaylistBloc>()
+                                      //       .songDuration,
+                                      // ),
+                                      ),
                             ],
                           ),
                         ),

@@ -24,23 +24,17 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     on<ResumeTrack>(_onResume);
     on<NextTrack>(_onNext);
     on<PreviousTrack>(_onPrevious);
-    // on<UpdateCurrentDuration>(_onUpdatedCurrentDuration);
-    // on<UpdateTotalDuration>(_onUpdatedTotalDuration);
+    on<UpdateCurrentDuration>(_onUpdatedCurrentDuration);
+    on<UpdateTotalDuration>(_onUpdatedTotalDuration);
     // on<SliderChange>(_onSliderChange);
     // on<SongCompleted>(_onSongCompleted);
     on<ReplayTrack>(_onReplay);
     on<ShuffleTracks>(_onShuffle);
     on<ReplayShuffleToggle>(_onReplayShuffleToggle);
 
-    // _initializePlayerSubscriptions(); //keep listening to this function
+    _initializePlayerSubscriptions(); //keep listening to this function
   }
 
-  // final player = AudioPlayer();
-  // int _currentIndex = 0;
-  // Duration _currentDuration = Duration.zero;
-  // Duration _totalDuration = Duration.zero;
-  // late StreamSubscription<Duration> _durationSubscription;
-  // late StreamSubscription<Duration> _positionSubscription;
   bool _toggleReplay = false;
   bool _toggleShuffle = false;
 
@@ -53,26 +47,27 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     return super.close();
   }
 
-  // void _initializePlayerSubscriptions() {
-  //   _durationSubscription = player.onDurationChanged.listen((newDuration) {
-  //     add(UpdateTotalDuration(newDuration: newDuration)); // Dispatch event here
-  //   });
+  void _initializePlayerSubscriptions() {
+    _manager.player.onDurationChanged.listen((_) {
+      add(UpdateTotalDuration(
+          newDuration: _manager.totalDuration)); // Dispatch event here
+    });
 
-  //   _positionSubscription = player.onPositionChanged.listen((newPosition) {
-  //     add(UpdateCurrentDuration(
-  //         newPosition: newPosition)); // Dispatch event here
-  //   });
+    _manager.player.onPositionChanged.listen((_) {
+      add(UpdateCurrentDuration(
+          newPosition: _manager.currentDuration)); // Dispatch event here
+    });
 
-  //   player.onPlayerComplete.listen((_) {
-  //     if (_toggleReplay) {
-  //       add(ReplayTrack());
-  //     } else if (_toggleShuffle) {
-  //       add(ShuffleTracks());
-  //     } else {
-  //       add(SongCompleted());
-  //     }
-  //   });
-  // }
+    _manager.player.onPlayerComplete.listen((_) {
+      if (_toggleReplay) {
+        add(ReplayTrack());
+      } else if (_toggleShuffle) {
+        add(ShuffleTracks());
+      } else {
+        add(SongCompleted());
+      }
+    });
+  }
 
   Future<void> _onPlay(PlayTrack event, Emitter<SongPlaylistState> emit) async {
     emit(FetchingSong());
@@ -102,26 +97,18 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   }
 
   Future<void> _onNext(NextTrack event, Emitter<SongPlaylistState> emit) async {
-    // int newSongIndex = songList.indexWhere(
-    //     (element) => songList.indexOf(element) == event.selectedIndex);
-    // _manager.currentIndex = newSongIndex;
     _manager.next();
     emit(SongisPlaying());
   }
 
   Future<void> _onPrevious(
       PreviousTrack event, Emitter<SongPlaylistState> emit) async {
-    // int newSongIndex = songList.indexWhere(
-    //     (element) => songList.indexOf(element) == event.selectedIndex);
-    // _manager.currentIndex = newSongIndex;
     _manager.previous();
     emit(SongisPlaying());
   }
 
   Future<void> _onReplay(
       ReplayTrack event, Emitter<SongPlaylistState> emit) async {
-    // int newSongIndex = songList
-    //     .indexWhere((element) => songList.indexOf(element) == _currentIndex);
     _manager.replay();
     emit(SongReplay());
   }
@@ -143,17 +130,17 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   //   emit(SongSeek());
   // }
 
-  // Future<void> _onUpdatedCurrentDuration(
-  //     UpdateCurrentDuration event, Emitter<SongPlaylistState> emit) async {
-  //   _currentDuration = event.newPosition;
-  //   emit(SongPositionUpdated(_currentDuration));
-  // }
+  Future<void> _onUpdatedCurrentDuration(
+      UpdateCurrentDuration event, Emitter<SongPlaylistState> emit) async {
+    _manager.currentDuration = event.newPosition;
+    emit(SongPositionUpdated(_manager.currentDuration));
+  }
 
-  // Future<void> _onUpdatedTotalDuration(
-  //     UpdateTotalDuration event, Emitter<SongPlaylistState> emit) async {
-  //   _totalDuration = event.newDuration;
-  //   emit(SongDurationUpdated(_totalDuration));
-  // }
+  Future<void> _onUpdatedTotalDuration(
+      UpdateTotalDuration event, Emitter<SongPlaylistState> emit) async {
+    _manager.totalDuration = event.newDuration;
+    emit(SongDurationUpdated(_manager.totalDuration));
+  }
 
   // void _onSongCompleted(
   //     SongCompleted event, Emitter<SongPlaylistState> emit) async {
@@ -189,23 +176,23 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   //   await player.seek(position);
   // }
 
-  // void setToggleReplay() {
-  //   _toggleReplay = !_toggleReplay;
-  //   add(ReplayShuffleToggle());
-  // }
+  void setToggleReplay() {
+    _toggleReplay = !_toggleReplay;
+    add(ReplayShuffleToggle());
+  }
 
-  // void setToggleShuffle() {
-  //   _toggleShuffle = !_toggleShuffle;
-  //   add(ReplayShuffleToggle());
-  // }
+  void setToggleShuffle() {
+    _toggleShuffle = !_toggleShuffle;
+    add(ReplayShuffleToggle());
+  }
 
-  // void onShuffleDisableReplay() {
-  //   _toggleReplay = false;
-  // }
+  void onShuffleDisableReplay() {
+    _toggleReplay = false;
+  }
 
-  // void onReplayDisableSuffle() {
-  //   _toggleShuffle = false;
-  // }
+  void onReplayDisableSuffle() {
+    _toggleShuffle = false;
+  }
 
   // Duration get currentDuration =>
   //     _currentDuration <= Duration.zero ? Duration.zero : _currentDuration;
@@ -214,6 +201,6 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   //   return _totalDuration <= Duration.zero ? Duration.zero : _totalDuration;
   // }
 
-  // bool get toggleReplay => _toggleReplay;
-  // bool get toggleShuffle => _toggleShuffle;
+  bool get toggleReplay => _toggleReplay;
+  bool get toggleShuffle => _toggleShuffle;
 }

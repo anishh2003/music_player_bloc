@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:music_player/bloc/song_playlist_bloc.dart';
 import 'package:music_player/models/song.dart';
 
 class SongPlaylistManager {
@@ -12,6 +13,7 @@ class SongPlaylistManager {
   late List<Song> _songList;
   late Duration _currentDuration;
   late Duration _totalDuration;
+
   late int _currentIndex;
 
   SongPlaylistManager(this._songList) {
@@ -22,11 +24,11 @@ class SongPlaylistManager {
   }
 
   void _initializePlayerSubscriptions() {
-    _durationSubscription = player.onDurationChanged.listen((newDuration) {
+    player.onDurationChanged.listen((newDuration) {
       _totalDuration = newDuration;
     });
 
-    _positionSubscription = player.onPositionChanged.listen((newPosition) {
+    player.onPositionChanged.listen((newPosition) {
       _currentDuration = newPosition;
     });
 
@@ -96,6 +98,14 @@ class SongPlaylistManager {
     _currentIndex = index;
   }
 
+  set currentDuration(Duration duration) {
+    _currentDuration = duration;
+  }
+
+  set totalDuration(Duration duration) {
+    _currentDuration = duration;
+  }
+
   // void onSongCompleted() {
   //   next(index);
   // }
@@ -110,7 +120,10 @@ class SongPlaylistManager {
 
   Duration get currentDuration => _currentDuration;
 
+  Duration get totalDuration => _totalDuration;
+
   Duration get songDuration => _totalDuration;
 
   int get currentIndex => _currentIndex;
+  AudioPlayer get audioplayer => player;
 }

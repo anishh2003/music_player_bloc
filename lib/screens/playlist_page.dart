@@ -50,9 +50,6 @@ class PlayListPage extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
-                        // context
-                        //     .read<SongPlaylistBloc>()
-                        //     .setCurrentIndex(index, ButtonPressed.play);
                         context.read<SongPlaylistBloc>().add(PlayTrack(index));
                         Navigator.of(context).push(
                           MaterialPageRoute(
