@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_player/data/music_data.dart';
 import 'package:music_player/models/song.dart';
 import 'package:flutter/foundation.dart';
+import 'package:music_player/song_playlist_manager.dart';
 part 'song_playlist_event.dart';
 part 'song_playlist_state.dart';
 
@@ -23,75 +24,75 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     on<ResumeTrack>(_onResume);
     on<NextTrack>(_onNext);
     on<PreviousTrack>(_onPrevious);
-    on<UpdateCurrentDuration>(_onUpdatedCurrentDuration);
-    on<UpdateTotalDuration>(_onUpdatedTotalDuration);
-    on<SliderChange>(_onSliderChange);
-    on<SongCompleted>(_onSongCompleted);
+    // on<UpdateCurrentDuration>(_onUpdatedCurrentDuration);
+    // on<UpdateTotalDuration>(_onUpdatedTotalDuration);
+    // on<SliderChange>(_onSliderChange);
+    // on<SongCompleted>(_onSongCompleted);
     on<ReplayTrack>(_onReplay);
     on<ShuffleTracks>(_onShuffle);
     on<ReplayShuffleToggle>(_onReplayShuffleToggle);
 
-    _initializePlayerSubscriptions(); //keep listening to this function
+    // _initializePlayerSubscriptions(); //keep listening to this function
   }
 
-  final player = AudioPlayer();
-  int _currentIndex = 0;
-  Duration _currentDuration = Duration.zero;
-  Duration _totalDuration = Duration.zero;
-  late StreamSubscription<Duration> _durationSubscription;
-  late StreamSubscription<Duration> _positionSubscription;
+  // final player = AudioPlayer();
+  // int _currentIndex = 0;
+  // Duration _currentDuration = Duration.zero;
+  // Duration _totalDuration = Duration.zero;
+  // late StreamSubscription<Duration> _durationSubscription;
+  // late StreamSubscription<Duration> _positionSubscription;
   bool _toggleReplay = false;
   bool _toggleShuffle = false;
+
+  final SongPlaylistManager _manager = SongPlaylistManager(songList);
 
   @override
   Future<void> close() {
     // Cancel subscriptions when closing the bloc
-    _durationSubscription.cancel();
-    _positionSubscription.cancel();
+    _manager.dispose();
     return super.close();
   }
 
-  void _initializePlayerSubscriptions() {
-    _durationSubscription = player.onDurationChanged.listen((newDuration) {
-      add(UpdateTotalDuration(newDuration: newDuration)); // Dispatch event here
-    });
+  // void _initializePlayerSubscriptions() {
+  //   _durationSubscription = player.onDurationChanged.listen((newDuration) {
+  //     add(UpdateTotalDuration(newDuration: newDuration)); // Dispatch event here
+  //   });
 
-    _positionSubscription = player.onPositionChanged.listen((newPosition) {
-      add(UpdateCurrentDuration(
-          newPosition: newPosition)); // Dispatch event here
-    });
+  //   _positionSubscription = player.onPositionChanged.listen((newPosition) {
+  //     add(UpdateCurrentDuration(
+  //         newPosition: newPosition)); // Dispatch event here
+  //   });
 
-    player.onPlayerComplete.listen((_) {
-      if (_toggleReplay) {
-        add(ReplayTrack());
-      } else if (_toggleShuffle) {
-        add(ShuffleTracks());
-      } else {
-        add(SongCompleted());
-      }
-    });
-  }
+  //   player.onPlayerComplete.listen((_) {
+  //     if (_toggleReplay) {
+  //       add(ReplayTrack());
+  //     } else if (_toggleShuffle) {
+  //       add(ShuffleTracks());
+  //     } else {
+  //       add(SongCompleted());
+  //     }
+  //   });
+  // }
 
   Future<void> _onPlay(PlayTrack event, Emitter<SongPlaylistState> emit) async {
     emit(FetchingSong());
-    int newSongIndex = songList
-        .indexWhere((element) => songList.indexOf(element) == _currentIndex);
-    Song newSong = songList[newSongIndex];
-    await player.stop();
-    await player.play(AssetSource(newSong.audioPath));
+    int newSongIndex = songList.indexWhere(
+        (element) => songList.indexOf(element) == event.selectedIndex);
+    _manager.currentIndex = newSongIndex;
+    _manager.play();
 
     emit(SongisPlaying());
   }
 
   Future<void> _onPause(
       PauseTrack event, Emitter<SongPlaylistState> emit) async {
-    await player.pause();
+    await _manager.pause();
     emit(SongIsPaused());
   }
 
   Future<void> _onResume(
       ResumeTrack event, Emitter<SongPlaylistState> emit) async {
-    await player.resume();
+    await _manager.resume();
     emit(SongResumed());
   }
 
@@ -101,124 +102,118 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   }
 
   Future<void> _onNext(NextTrack event, Emitter<SongPlaylistState> emit) async {
-    int newSongIndex = songList
-        .indexWhere((element) => songList.indexOf(element) == _currentIndex);
-    Song newSong = songList[newSongIndex];
-    await player.stop();
-    await player.play(AssetSource(newSong.audioPath));
+    // int newSongIndex = songList.indexWhere(
+    //     (element) => songList.indexOf(element) == event.selectedIndex);
+    // _manager.currentIndex = newSongIndex;
+    _manager.next();
     emit(SongisPlaying());
   }
 
   Future<void> _onPrevious(
       PreviousTrack event, Emitter<SongPlaylistState> emit) async {
-    int newSongIndex = songList
-        .indexWhere((element) => songList.indexOf(element) == _currentIndex);
-    Song newSong = songList[newSongIndex];
-    await player.stop();
-    await player.play(AssetSource(newSong.audioPath));
+    // int newSongIndex = songList.indexWhere(
+    //     (element) => songList.indexOf(element) == event.selectedIndex);
+    // _manager.currentIndex = newSongIndex;
+    _manager.previous();
     emit(SongisPlaying());
   }
 
   Future<void> _onReplay(
       ReplayTrack event, Emitter<SongPlaylistState> emit) async {
-    int newSongIndex = songList
-        .indexWhere((element) => songList.indexOf(element) == _currentIndex);
-    Song newSong = songList[newSongIndex];
-    await player.stop();
-    await player.play(AssetSource(newSong.audioPath));
+    // int newSongIndex = songList
+    //     .indexWhere((element) => songList.indexOf(element) == _currentIndex);
+    _manager.replay();
     emit(SongReplay());
   }
 
   Future<void> _onShuffle(
       ShuffleTracks event, Emitter<SongPlaylistState> emit) async {
-    _totalDuration = Duration.zero;
-    _currentDuration = Duration.zero;
-    _currentIndex = Random().nextInt(songList.length);
-    int newSongIndex = songList
-        .indexWhere((element) => songList.indexOf(element) == _currentIndex);
-    Song newSong = songList[newSongIndex];
-    await player.stop();
-    await player.play(AssetSource(newSong.audioPath));
+    // _totalDuration = Duration.zero;
+    // _currentDuration = Duration.zero;
+    // _currentIndex = Random().nextInt(songList.length);
+    // int newSongIndex = songList
+    //     .indexWhere((element) => songList.indexOf(element) == _currentIndex);
+    _manager.shuffle();
     emit(SongReplay());
   }
 
-  Future<void> _onSliderChange(
-      SliderChange event, Emitter<SongPlaylistState> emit) async {
-    setSeekDuration(event.sliderValueDuration);
-    emit(SongSeek());
-  }
+  // Future<void> _onSliderChange(
+  //     SliderChange event, Emitter<SongPlaylistState> emit) async {
+  //   setSeekDuration(event.sliderValueDuration);
+  //   emit(SongSeek());
+  // }
 
-  Future<void> _onUpdatedCurrentDuration(
-      UpdateCurrentDuration event, Emitter<SongPlaylistState> emit) async {
-    _currentDuration = event.newPosition;
-    emit(SongPositionUpdated(_currentDuration));
-  }
+  // Future<void> _onUpdatedCurrentDuration(
+  //     UpdateCurrentDuration event, Emitter<SongPlaylistState> emit) async {
+  //   _currentDuration = event.newPosition;
+  //   emit(SongPositionUpdated(_currentDuration));
+  // }
 
-  Future<void> _onUpdatedTotalDuration(
-      UpdateTotalDuration event, Emitter<SongPlaylistState> emit) async {
-    _totalDuration = event.newDuration;
-    emit(SongDurationUpdated(_totalDuration));
-  }
+  // Future<void> _onUpdatedTotalDuration(
+  //     UpdateTotalDuration event, Emitter<SongPlaylistState> emit) async {
+  //   _totalDuration = event.newDuration;
+  //   emit(SongDurationUpdated(_totalDuration));
+  // }
 
-  void _onSongCompleted(
-      SongCompleted event, Emitter<SongPlaylistState> emit) async {
-    setCurrentIndex(_currentIndex, ButtonPressed.next);
-    add(NextTrack()); //event
-  }
+  // void _onSongCompleted(
+  //     SongCompleted event, Emitter<SongPlaylistState> emit) async {
+  //   setCurrentIndex(_currentIndex, ButtonPressed.next);
+  //   add(NextTrack()); //event
+  // }
 
-  int get currentIndex => _currentIndex;
+  int get currentIndex => _manager.currentIndex;
 
-  int setCurrentIndex(int value, ButtonPressed buttonPressed) {
-    if (buttonPressed == ButtonPressed.previous) {
-      if (value <= 0) {
-        _currentIndex = 0;
-      } else {
-        _currentIndex = value - 1;
-      }
-    } else if (buttonPressed == ButtonPressed.play) {
-      _currentIndex = value;
-    } else if (buttonPressed == ButtonPressed.pause) {
-      _currentIndex = value;
-    } else {
-      if (value >= songList.length - 1) {
-        _currentIndex = 0;
-      } else {
-        _currentIndex = value + 1;
-      }
-    }
+  // int setCurrentIndex(int value, ButtonPressed buttonPressed) {
+  //   if (buttonPressed == ButtonPressed.previous) {
+  //     if (value <= 0) {
+  //       _currentIndex = 0;
+  //     } else {
+  //       _currentIndex = value - 1;
+  //     }
+  //   } else if (buttonPressed == ButtonPressed.play) {
+  //     _currentIndex = value;
+  //   } else if (buttonPressed == ButtonPressed.pause) {
+  //     _currentIndex = value;
+  //   } else {
+  //     if (value >= songList.length - 1) {
+  //       _currentIndex = 0;
+  //     } else {
+  //       _currentIndex = value + 1;
+  //     }
+  //   }
 
-    return _currentIndex;
-  }
+  //   return _currentIndex;
+  // }
 
-  void setSeekDuration(Duration position) async {
-    await player.seek(position);
-  }
+  // void setSeekDuration(Duration position) async {
+  //   await player.seek(position);
+  // }
 
-  void setToggleReplay() {
-    _toggleReplay = !_toggleReplay;
-    add(ReplayShuffleToggle());
-  }
+  // void setToggleReplay() {
+  //   _toggleReplay = !_toggleReplay;
+  //   add(ReplayShuffleToggle());
+  // }
 
-  void setToggleShuffle() {
-    _toggleShuffle = !_toggleShuffle;
-    add(ReplayShuffleToggle());
-  }
+  // void setToggleShuffle() {
+  //   _toggleShuffle = !_toggleShuffle;
+  //   add(ReplayShuffleToggle());
+  // }
 
-  void onShuffleDisableReplay() {
-    _toggleReplay = false;
-  }
+  // void onShuffleDisableReplay() {
+  //   _toggleReplay = false;
+  // }
 
-  void onReplayDisableSuffle() {
-    _toggleShuffle = false;
-  }
+  // void onReplayDisableSuffle() {
+  //   _toggleShuffle = false;
+  // }
 
-  Duration get currentDuration =>
-      _currentDuration <= Duration.zero ? Duration.zero : _currentDuration;
+  // Duration get currentDuration =>
+  //     _currentDuration <= Duration.zero ? Duration.zero : _currentDuration;
 
-  Duration get songDuration {
-    return _totalDuration <= Duration.zero ? Duration.zero : _totalDuration;
-  }
+  // Duration get songDuration {
+  //   return _totalDuration <= Duration.zero ? Duration.zero : _totalDuration;
+  // }
 
-  bool get toggleReplay => _toggleReplay;
-  bool get toggleShuffle => _toggleShuffle;
+  // bool get toggleReplay => _toggleReplay;
+  // bool get toggleShuffle => _toggleShuffle;
 }

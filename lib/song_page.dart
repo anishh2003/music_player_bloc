@@ -33,9 +33,9 @@ class _SongPageState extends State<SongPage> {
           builder: (context, state) {
             var currentIndex = context.read<SongPlaylistBloc>().currentIndex;
             var currentSong = state.songList[currentIndex];
-            var totalDuration = context.read<SongPlaylistBloc>().songDuration;
-            var currentDuration =
-                context.read<SongPlaylistBloc>().currentDuration;
+            // var totalDuration = context.read<SongPlaylistBloc>().songDuration;
+            // var currentDuration =
+            //     context.read<SongPlaylistBloc>().currentDuration;
 
             return SingleChildScrollView(
               child: Padding(
@@ -149,100 +149,100 @@ class _SongPageState extends State<SongPage> {
                             children: [
                               state is SongPositionUpdated
                                   ? Text(formatTime(state.newPosition))
-                                  : Text(
-                                      formatTime(
-                                        context
-                                            .watch<SongPlaylistBloc>()
-                                            .currentDuration,
+                                  : Text('0'
+                                      // formatTime(
+                                      //   context
+                                      //       .watch<SongPlaylistBloc>()
+                                      //       .currentDuration,
+                                      // ),
                                       ),
-                                    ),
-                              IconButton(
-                                onPressed: () {
-                                  context
-                                      .read<SongPlaylistBloc>()
-                                      .add(ShuffleTracks());
-                                },
-                                icon: IconButton(
-                                    icon: Icon(Icons.shuffle,
-                                        color: context
-                                                .read<SongPlaylistBloc>()
-                                                .toggleShuffle
-                                            ? Colors.green
-                                            : Theme.of(context)
-                                                .colorScheme
-                                                .onBackground),
-                                    onPressed: () {
-                                      context
-                                          .read<SongPlaylistBloc>()
-                                          .onShuffleDisableReplay();
-                                      context
-                                          .read<SongPlaylistBloc>()
-                                          .setToggleShuffle();
-                                    }),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  context
-                                      .read<SongPlaylistBloc>()
-                                      .setToggleReplay();
-                                  context
-                                      .read<SongPlaylistBloc>()
-                                      .add(ReplayTrack());
-                                },
-                                icon: IconButton(
-                                    icon: Icon(Icons.repeat,
-                                        color: context
-                                                .read<SongPlaylistBloc>()
-                                                .toggleReplay
-                                            ? Colors.green
-                                            : Theme.of(context)
-                                                .colorScheme
-                                                .onBackground),
-                                    onPressed: () {
-                                      context
-                                          .read<SongPlaylistBloc>()
-                                          .onReplayDisableSuffle();
-                                      context
-                                          .read<SongPlaylistBloc>()
-                                          .setToggleReplay();
-                                    }),
-                              ),
-                              state is SongDurationUpdated
-                                  ? Text(formatTime(state.newDuration))
-                                  : Text(formatTime(
-                                      context
-                                          .read<SongPlaylistBloc>()
-                                          .songDuration,
-                                    )),
+                              // IconButton(
+                              //   onPressed: () {
+                              //     context
+                              //         .read<SongPlaylistBloc>()
+                              //         .add(ShuffleTracks());
+                              //   },
+                              //   icon: IconButton(
+                              //       icon: Icon(Icons.shuffle,
+                              //           color: context
+                              //                   .read<SongPlaylistBloc>()
+                              //                   .toggleShuffle
+                              //               ? Colors.green
+                              //               : Theme.of(context)
+                              //                   .colorScheme
+                              //                   .onBackground),
+                              //       onPressed: () {
+                              //         context
+                              //             .read<SongPlaylistBloc>()
+                              //             .onShuffleDisableReplay();
+                              //         context
+                              //             .read<SongPlaylistBloc>()
+                              //             .setToggleShuffle();
+                              //       }),
+                              // ),
+                              // IconButton(
+                              //   onPressed: () {
+                              //     context
+                              //         .read<SongPlaylistBloc>()
+                              //         .setToggleReplay();
+                              //     context
+                              //         .read<SongPlaylistBloc>()
+                              //         .add(ReplayTrack());
+                              //   },
+                              //   icon: IconButton(
+                              //       icon: Icon(Icons.repeat,
+                              //           color: context
+                              //                   .read<SongPlaylistBloc>()
+                              //                   .toggleReplay
+                              //               ? Colors.green
+                              //               : Theme.of(context)
+                              //                   .colorScheme
+                              //                   .onBackground),
+                              //       onPressed: () {
+                              //         context
+                              //             .read<SongPlaylistBloc>()
+                              //             .onReplayDisableSuffle();
+                              //         context
+                              //             .read<SongPlaylistBloc>()
+                              //             .setToggleReplay();
+                              //       }),
+                              // ),
+                              // state is SongDurationUpdated
+                              //     ? Text(formatTime(state.newDuration))
+                              //     : Text(formatTime(
+                              //         context
+                              //             .read<SongPlaylistBloc>()
+                              //             .songDuration,
+                              //       )),
                             ],
                           ),
                         ),
 
                         const SizedBox(height: 10),
 
-                        SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            inactiveTrackColor:
-                                Theme.of(context).colorScheme.primary,
-                            thumbShape: const RoundSliderThumbShape(
-                              enabledThumbRadius: 8,
-                            ),
-                          ),
-                          child: Slider(
-                            min: 0,
-                            max: totalDuration.inSeconds.toDouble(),
-                            value: currentDuration.inSeconds.toDouble(),
-                            activeColor: Colors.green,
-                            onChanged: (double double) {
-                              context.read<SongPlaylistBloc>().add(
-                                    SliderChange(
-                                      sliderValueDuration:
-                                          Duration(seconds: double.toInt()),
-                                    ),
-                                  );
-                            },
-                          ),
-                        ),
+                        // SliderTheme(
+                        //   data: SliderTheme.of(context).copyWith(
+                        //     inactiveTrackColor:
+                        //         Theme.of(context).colorScheme.primary,
+                        //     thumbShape: const RoundSliderThumbShape(
+                        //       enabledThumbRadius: 8,
+                        //     ),
+                        //   ),
+                        //   child: Slider(
+                        //     min: 0,
+                        //     max: totalDuration.inSeconds.toDouble(),
+                        //     value: currentDuration.inSeconds.toDouble(),
+                        //     activeColor: Colors.green,
+                        //     onChanged: (double double) {
+                        //       context.read<SongPlaylistBloc>().add(
+                        //             SliderChange(
+                        //               sliderValueDuration:
+                        //                   Duration(seconds: double.toInt()),
+                        //             ),
+                        //           );
+                        //     },
+                        //   ),
+                        // ),
 
                         const SizedBox(height: 30),
 
@@ -255,10 +255,10 @@ class _SongPageState extends State<SongPage> {
                                 child: NeuBox(
                                     child: IconButton(
                                   onPressed: () async {
-                                    context
-                                        .read<SongPlaylistBloc>()
-                                        .setCurrentIndex(currentIndex,
-                                            ButtonPressed.previous);
+                                    // context
+                                    // .read<SongPlaylistBloc>()
+                                    // .setCurrentIndex(currentIndex,
+                                    //     ButtonPressed.previous);
                                     context
                                         .read<SongPlaylistBloc>()
                                         .add(PreviousTrack());
@@ -306,10 +306,10 @@ class _SongPageState extends State<SongPage> {
                                 child: NeuBox(
                                     child: IconButton(
                                   onPressed: () async {
-                                    context
-                                        .read<SongPlaylistBloc>()
-                                        .setCurrentIndex(
-                                            currentIndex, ButtonPressed.next);
+                                    // context
+                                    //     .read<SongPlaylistBloc>()
+                                    //     .setCurrentIndex(
+                                    //         currentIndex, ButtonPressed.next);
                                     context
                                         .read<SongPlaylistBloc>()
                                         .add(NextTrack());

@@ -47,51 +47,53 @@ class SongPlaylistManager {
     _positionSubscription.cancel();
   }
 
-  void play(int index) async {
-    final newSong = _songList[index];
+  void play() async {
+    final newSong = _songList[_currentIndex];
     await player.stop();
     await player.play(AssetSource(newSong.audioPath));
   }
 
-  void pause() async {
+  Future<void> pause() async {
     await player.pause();
   }
 
-  void resume() async {
+  Future<void> resume() async {
     await player.resume();
   }
 
-  void next(int index) {
-    // _currentIndex = (_currentIndex + 1) % _songList.length;
-    index = index + 1;
-    play(index);
-  }
-
-  void previous(int index) {
-    // _currentIndex = (_currentIndex - 1) % _songList.length;
-    // if (_currentIndex < 0) {
-    //   _currentIndex = _songList.length - 1;
-    // }
-
-    if (index <= 0) {
-      index = 0;
+  void next() {
+    if (_currentIndex >= _songList.length - 1) {
+      _currentIndex = 0;
     } else {
-      index = index - 1;
+      _currentIndex = _currentIndex + 1;
     }
-    play(index);
+    play();
   }
 
-  void replay(int index) {
-    play(index);
+  void previous() {
+    if (_currentIndex <= 0) {
+      _currentIndex = 0;
+    } else {
+      _currentIndex = _currentIndex - 1;
+    }
+    play();
+  }
+
+  void replay() {
+    play();
   }
 
   void shuffle() {
-    int index = Random().nextInt(_songList.length);
-    play(index);
+    _currentIndex = Random().nextInt(_songList.length - 1);
+    play();
   }
 
   void onSliderChange(Duration position) async {
     await player.seek(position);
+  }
+
+  set currentIndex(int index) {
+    _currentIndex = index;
   }
 
   // void onSongCompleted() {
@@ -109,4 +111,6 @@ class SongPlaylistManager {
   Duration get currentDuration => _currentDuration;
 
   Duration get songDuration => _totalDuration;
+
+  int get currentIndex => _currentIndex;
 }

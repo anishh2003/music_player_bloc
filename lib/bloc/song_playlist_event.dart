@@ -3,15 +3,23 @@ part of 'song_playlist_bloc.dart';
 @immutable
 sealed class SongPlaylistEvent {}
 
-final class PlayTrack extends SongPlaylistEvent {}
+final class PlayTrack extends SongPlaylistEvent {
+  final int selectedIndex;
+
+  PlayTrack(this.selectedIndex);
+}
 
 final class PauseTrack extends SongPlaylistEvent {}
 
 final class ResumeTrack extends SongPlaylistEvent {}
 
-final class PreviousTrack extends SongPlaylistEvent {}
+final class PreviousTrack extends SongPlaylistEvent {
+  PreviousTrack();
+}
 
-final class NextTrack extends SongPlaylistEvent {}
+final class NextTrack extends SongPlaylistEvent {
+  NextTrack();
+}
 
 final class SongCompleted extends SongPlaylistEvent {}
 
