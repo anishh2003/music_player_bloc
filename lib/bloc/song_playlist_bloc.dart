@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:math';
-
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_player/data/music_data.dart';
 import 'package:music_player/models/song.dart';
@@ -9,13 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:music_player/song_playlist_manager.dart';
 part 'song_playlist_event.dart';
 part 'song_playlist_state.dart';
-
-enum ButtonPressed {
-  previous,
-  play,
-  pause,
-  next,
-}
 
 class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   SongPlaylistBloc() : super(SongPlaylistInitial(songList)) {
@@ -27,7 +17,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     on<UpdateCurrentDuration>(_onUpdatedCurrentDuration);
     on<UpdateTotalDuration>(_onUpdatedTotalDuration);
     on<SliderChange>(_onSliderChange);
-    // on<SongCompleted>(_onSongCompleted);
+    on<SongCompleted>(_onSongCompleted);
     on<ReplayTrack>(_onReplay);
     on<ShuffleTracks>(_onShuffle);
     on<ReplayShuffleToggle>(_onReplayShuffleToggle);
@@ -88,23 +78,23 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   Future<void> _onResume(
       ResumeTrack event, Emitter<SongPlaylistState> emit) async {
     await _manager.resume();
-    emit(SongResumed());
+    emit(SongisPlaying());
   }
 
   Future<void> _onReplayShuffleToggle(
       ReplayShuffleToggle event, Emitter<SongPlaylistState> emit) async {
-    emit(ReplayShuffleToggleState());
+    emit(SongisPlaying());
   }
 
   Future<void> _onNext(NextTrack event, Emitter<SongPlaylistState> emit) async {
     _manager.next();
-    emit(SongisPlaying());
+    emit(FetchingSong());
   }
 
   Future<void> _onPrevious(
       PreviousTrack event, Emitter<SongPlaylistState> emit) async {
     _manager.previous();
-    emit(SongisPlaying());
+    emit(FetchingSong());
   }
 
   Future<void> _onReplay(
@@ -115,13 +105,8 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   Future<void> _onShuffle(
       ShuffleTracks event, Emitter<SongPlaylistState> emit) async {
-    // _totalDuration = Duration.zero;
-    // _currentDuration = Duration.zero;
-    // _currentIndex = Random().nextInt(songList.length);
-    // int newSongIndex = songList
-    //     .indexWhere((element) => songList.indexOf(element) == _currentIndex);
     _manager.shuffle();
-    emit(SongReplay());
+    emit(FetchingSong());
   }
 
   Future<void> _onSliderChange(
@@ -142,39 +127,10 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     emit(SongDurationUpdated(_manager.totalDuration));
   }
 
-  // void _onSongCompleted(
-  //     SongCompleted event, Emitter<SongPlaylistState> emit) async {
-  //   setCurrentIndex(_currentIndex, ButtonPressed.next);
-  //   add(NextTrack()); //event
-  // }
-
-  int get currentIndex => _manager.currentIndex;
-
-  // int setCurrentIndex(int value, ButtonPressed buttonPressed) {
-  //   if (buttonPressed == ButtonPressed.previous) {
-  //     if (value <= 0) {
-  //       _currentIndex = 0;
-  //     } else {
-  //       _currentIndex = value - 1;
-  //     }
-  //   } else if (buttonPressed == ButtonPressed.play) {
-  //     _currentIndex = value;
-  //   } else if (buttonPressed == ButtonPressed.pause) {
-  //     _currentIndex = value;
-  //   } else {
-  //     if (value >= songList.length - 1) {
-  //       _currentIndex = 0;
-  //     } else {
-  //       _currentIndex = value + 1;
-  //     }
-  //   }
-
-  //   return _currentIndex;
-  // }
-
-  // void setSeekDuration(Duration position) async {
-  //   await player.seek(position);
-  // }
+  void _onSongCompleted(
+      SongCompleted event, Emitter<SongPlaylistState> emit) async {
+    add(NextTrack()); //event
+  }
 
   void setToggleReplay() {
     _toggleReplay = !_toggleReplay;
@@ -194,17 +150,16 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     _toggleShuffle = false;
   }
 
-  // Duration get currentDuration =>
-  //     _currentDuration <= Duration.zero ? Duration.zero : _currentDuration;
-
-  // Duration get songDuration {
-  //   return _totalDuration <= Duration.zero ? Duration.zero : _totalDuration;
-  // }
-
   bool get toggleReplay => _toggleReplay;
   bool get toggleShuffle => _toggleShuffle;
 
-  Duration get currentDuration => _manager.currentDuration;
+  int get currentIndex => _manager.currentIndex;
 
-  Duration get totalDuration => _manager.totalDuration;
+  Duration get currentDuration => _manager.currentDuration <= Duration.zero
+      ? Duration.zero
+      : _manager.currentDuration;
+
+  Duration get totalDuration => _manager.totalDuration <= Duration.zero
+      ? Duration.zero
+      : _manager.totalDuration;
 }

@@ -257,10 +257,6 @@ class _SongPageState extends State<SongPage> {
                                 child: NeuBox(
                                     child: IconButton(
                                   onPressed: () async {
-                                    // context
-                                    // .read<SongPlaylistBloc>()
-                                    // .setCurrentIndex(currentIndex,
-                                    //     ButtonPressed.previous);
                                     context
                                         .read<SongPlaylistBloc>()
                                         .add(PreviousTrack());
@@ -277,8 +273,7 @@ class _SongPageState extends State<SongPage> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20.0),
                                   child: NeuBox(
-                                    child: (state is SongPositionUpdated) ||
-                                            (state is SongSeek)
+                                    child: (state is! SongIsPaused)
                                         ? IconButton(
                                             onPressed: () async {
                                               context
@@ -308,10 +303,6 @@ class _SongPageState extends State<SongPage> {
                                 child: NeuBox(
                                     child: IconButton(
                                   onPressed: () async {
-                                    // context
-                                    //     .read<SongPlaylistBloc>()
-                                    //     .setCurrentIndex(
-                                    //         currentIndex, ButtonPressed.next);
                                     context
                                         .read<SongPlaylistBloc>()
                                         .add(NextTrack());
