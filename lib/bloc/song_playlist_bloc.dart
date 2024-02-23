@@ -26,7 +26,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     on<PreviousTrack>(_onPrevious);
     on<UpdateCurrentDuration>(_onUpdatedCurrentDuration);
     on<UpdateTotalDuration>(_onUpdatedTotalDuration);
-    // on<SliderChange>(_onSliderChange);
+    on<SliderChange>(_onSliderChange);
     // on<SongCompleted>(_onSongCompleted);
     on<ReplayTrack>(_onReplay);
     on<ShuffleTracks>(_onShuffle);
@@ -124,11 +124,11 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
     emit(SongReplay());
   }
 
-  // Future<void> _onSliderChange(
-  //     SliderChange event, Emitter<SongPlaylistState> emit) async {
-  //   setSeekDuration(event.sliderValueDuration);
-  //   emit(SongSeek());
-  // }
+  Future<void> _onSliderChange(
+      SliderChange event, Emitter<SongPlaylistState> emit) async {
+    _manager.onSliderChange(event.sliderValueDuration);
+    emit(SongSeek());
+  }
 
   Future<void> _onUpdatedCurrentDuration(
       UpdateCurrentDuration event, Emitter<SongPlaylistState> emit) async {
