@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_player/bloc/song_playlist_bloc.dart';
 import 'package:music_player/cubit/theme_cubit.dart';
 import 'package:music_player/screens/playlist_page.dart';
+import 'package:music_player/simple_bloc_observer.dart';
 import 'package:music_player/theme/dart_theme.dart';
 import 'package:music_player/theme/light_theme.dart';
 
 void main() {
+  Bloc.observer = SimpleBlocObserver();
   runApp(const MyApp());
 }
 

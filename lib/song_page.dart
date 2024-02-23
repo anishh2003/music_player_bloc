@@ -223,28 +223,36 @@ class _SongPageState extends State<SongPage> {
                         const SizedBox(height: 10),
 
                         SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            inactiveTrackColor:
-                                Theme.of(context).colorScheme.primary,
-                            thumbShape: const RoundSliderThumbShape(
-                              enabledThumbRadius: 8,
+                            data: SliderTheme.of(context).copyWith(
+                              inactiveTrackColor:
+                                  Theme.of(context).colorScheme.primary,
+                              thumbShape: const RoundSliderThumbShape(
+                                enabledThumbRadius: 8,
+                              ),
                             ),
-                          ),
-                          child: Slider(
-                            min: 0,
-                            max: totalDuration.inSeconds.toDouble(),
-                            value: currentDuration.inSeconds.toDouble(),
-                            activeColor: Colors.green,
-                            onChanged: (double double) {
-                              context.read<SongPlaylistBloc>().add(
-                                    SliderChange(
-                                      sliderValueDuration:
-                                          Duration(seconds: double.toInt()),
-                                    ),
-                                  );
-                            },
-                          ),
-                        ),
+                            child: (state is SongPositionUpdated) ||
+                                    (state is SongSeek)
+                                ? Slider(
+                                    min: 0,
+                                    max: totalDuration.inSeconds.toDouble(),
+                                    value: currentDuration.inSeconds.toDouble(),
+                                    activeColor: Colors.green,
+                                    onChanged: (double double) {
+                                      context.read<SongPlaylistBloc>().add(
+                                            SliderChange(
+                                              sliderValueDuration: Duration(
+                                                  seconds: double.toInt()),
+                                            ),
+                                          );
+                                    },
+                                  )
+                                : Slider(
+                                    inactiveColor: Colors.grey,
+                                    min: 0,
+                                    max: 0,
+                                    value: 0,
+                                    onChanged: null,
+                                  )),
 
                         const SizedBox(height: 30),
 

@@ -83,21 +83,18 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   Future<void> _onReplayShuffleToggle(
       ReplayShuffleToggle event, Emitter<SongPlaylistState> emit) async {
-    emit(SongisPlaying());
+    emit(SongReplay());
   }
 
   Future<void> _onNext(NextTrack event, Emitter<SongPlaylistState> emit) async {
-    _manager.totalDuration = Duration.zero;
-    _manager.currentDuration = Duration.zero;
-
     _manager.next();
-    emit(FetchingSong());
+    emit(SongisPlaying());
   }
 
   Future<void> _onPrevious(
       PreviousTrack event, Emitter<SongPlaylistState> emit) async {
     _manager.previous();
-    emit(FetchingSong());
+    emit(SongisPlaying());
   }
 
   Future<void> _onReplay(
@@ -158,9 +155,14 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   int get currentIndex => _manager.currentIndex;
 
-  Duration get currentDuration => _manager.currentDuration <= Duration.zero
-      ? Duration.zero
-      : _manager.currentDuration;
+  Duration get currentDuration {
+    if ((_manager.currentDuration <= Duration.zero) ||
+        (_manager.currentDuration > _manager.totalDuration)) {
+      return Duration.zero;
+    } else {
+      return _manager.currentDuration;
+    }
+  }
 
   Duration get totalDuration => _manager.totalDuration <= Duration.zero
       ? Duration.zero
