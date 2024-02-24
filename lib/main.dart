@@ -8,7 +8,7 @@ import 'package:music_player/theme/dart_theme.dart';
 import 'package:music_player/theme/light_theme.dart';
 
 void main() {
-  Bloc.observer = SimpleBlocObserver();
+  // Bloc.observer = SimpleBlocObserver();
   runApp(const MyApp());
 }
 
