@@ -106,7 +106,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   Future<void> _onShuffle(
       ShuffleTracks event, Emitter<SongPlaylistState> emit) async {
     _manager.shuffle();
-    emit(FetchingSong());
+    emit(SongShuffle());
   }
 
   Future<void> _onSliderChange(
