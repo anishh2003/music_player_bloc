@@ -157,7 +157,7 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
 
   Duration get currentDuration {
     if ((_manager.currentDuration <= Duration.zero) ||
-        (_manager.currentDuration > _manager.totalDuration)) {
+        (_manager.currentDuration >= _manager.totalDuration)) {
       return Duration.zero;
     } else {
       return _manager.currentDuration;
