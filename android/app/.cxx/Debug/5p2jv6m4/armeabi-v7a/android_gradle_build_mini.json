@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/anishhemachandran/Developer/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/anishhemachandran/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/anishhemachandran/StudioProjects/music_player/android/app/.cxx/Debug/5p2jv6m4/armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/anishhemachandran/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/anishhemachandran/StudioProjects/music_player/android/app/.cxx/Debug/5p2jv6m4/armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}
