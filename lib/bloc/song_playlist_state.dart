@@ -1,10 +1,13 @@
 part of 'song_playlist_bloc.dart';
 
 @immutable
-sealed class SongPlaylistState {
+sealed class SongPlaylistState extends Equatable {
   final List<Song> songList;
 
   const SongPlaylistState(this.songList);
+
+  @override
+  List<Object?> get props => [songList];
 }
 
 final class SongPlaylistInitial extends SongPlaylistState {
@@ -21,7 +24,12 @@ final class SongPlaylistLoaded extends SongPlaylistState {
 
 final class SongPlaylistError extends SongPlaylistState {
   final String error;
-  SongPlaylistError({required this.error}) : super(songList);
+
+  const SongPlaylistError({required this.error, required List<Song> songList})
+      : super(songList);
+
+  @override
+  List<Object?> get props => [error, songList];
 }
 
 final class FetchingSong extends SongPlaylistState {
@@ -54,10 +62,20 @@ final class SongShuffle extends SongPlaylistState {
 
 final class SongDurationUpdated extends SongPlaylistState {
   final Duration newDuration;
-  SongDurationUpdated(this.newDuration) : super(songList);
+  const SongDurationUpdated(
+      {required this.newDuration, required List<Song> songList})
+      : super(songList);
+
+  @override
+  List<Object?> get props => [newDuration, songList];
 }
 
 final class SongPositionUpdated extends SongPlaylistState {
   final Duration newPosition;
-  SongPositionUpdated(this.newPosition) : super(songList);
+  const SongPositionUpdated(
+      {required this.newPosition, required List<Song> songList})
+      : super(songList);
+
+  @override
+  List<Object?> get props => [newPosition, songList];
 }

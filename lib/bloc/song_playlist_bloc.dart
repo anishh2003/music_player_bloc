@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_player/data/music_data.dart';
 import 'package:music_player/models/song.dart';
@@ -118,13 +119,17 @@ class SongPlaylistBloc extends Bloc<SongPlaylistEvent, SongPlaylistState> {
   Future<void> _onUpdatedCurrentDuration(
       UpdateCurrentDuration event, Emitter<SongPlaylistState> emit) async {
     _manager.currentDuration = event.newPosition;
-    emit(SongPositionUpdated(_manager.currentDuration));
+    emit(SongPositionUpdated(
+        newPosition: _manager.currentDuration, songList: songList));
   }
 
   Future<void> _onUpdatedTotalDuration(
       UpdateTotalDuration event, Emitter<SongPlaylistState> emit) async {
     _manager.totalDuration = event.newDuration;
-    emit(SongDurationUpdated(_manager.totalDuration));
+    emit(SongDurationUpdated(
+      newDuration: _manager.totalDuration,
+      songList: songList,
+    ));
   }
 
   void _onSongCompleted(
